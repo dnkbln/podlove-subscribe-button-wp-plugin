@@ -1,17 +1,26 @@
 <?php
 
-namespace PodloveSubscribeButton;
+namespace PodloveSubscribeButton\Widget;
+
+error_log('Loading Widget.php');
+error_log('Current namespace: ' . __NAMESPACE__);
+
+use PodloveSubscribeButton\Model\Button;
+use PodloveSubscribeButton\Model\NetworkButton;
 
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-class Podlove_Subscribe_Button_Widget extends \WP_Widget {
+class PodloveSubscribeButtonWidget extends \WP_Widget {
 
 	public function __construct() {
 		parent::__construct(
-					'podlove_subscribe_button_wp_plugin_widget',
-					( self::is_podlove_publisher_active() ? 'Podlove Subscribe Button (WordPress plugin)' : 'Podlove Subscribe Button' ),
-					array( 'description' => __( 'Adds a Podlove Subscribe Button to your Sidebar', 'podlove-subscribe-button' ), )
-				);
+			'podlove_subscribe_button_wp_plugin_widget',
+			( self::is_podlove_publisher_active() ? 'Podlove Subscribe Button (WordPress plugin)' : 'Podlove Subscribe Button' ),
+			array( 'description' => __( 'Adds a Podlove Subscribe Button to your Sidebar', 'podlove-subscribe-button' ), )
+		);
+		add_action( 'widgets_init', function(){
+			register_widget( 'PodloveSubscribeButtonWidget' );
+		});
 	}
 
 	public static $widget_settings = array('infotext', 'title', 'size', 'style', 'format', 'autowidth', 'button', 'color');
@@ -26,7 +35,7 @@ class Podlove_Subscribe_Button_Widget extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		// Fetch the (network)button by it's name
-		if ( ! $button = \PodloveSubscribeButton\Model\Button::get_button_by_name($instance['button']) )
+		if ( ! $button = Button::get_button_by_name($instance['button']) )
 			return sprintf( __('Oops. There is no button with the ID "%s".', 'podlove-subscribe-button'), $args['button'] );
 
 		echo $args['before_widget'];
@@ -57,9 +66,9 @@ class Podlove_Subscribe_Button_Widget extends \WP_Widget {
         $infotext  = isset( $instance[ 'infotext' ] )  ? $instance[ 'infotext' ]  : '';
         $color     = isset( $instance[ 'color' ] )     ? $instance[ 'color' ]     : '#75ad91';
 
-		$buttons = \PodloveSubscribeButton\Model\Button::all();
+		$buttons = Button::all();
 		if ( is_multisite() )
-			$network_buttons = \PodloveSubscribeButton\Model\NetworkButton::all();
+			$network_buttons = NetworkButton::all();
 		?>
         <p>
             <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove-subscribe-button' ); ?></label>
@@ -105,19 +114,19 @@ class Podlove_Subscribe_Button_Widget extends \WP_Widget {
 			$customize_options = array(
 				'size'      => array(
 					'name'    => __( 'Size', 'podlove-subscribe-button' ),
-					'options' => \PodloveSubscribeButton\Model\Button::$size
+					'options' => Button::$size
 				),
 				'style'     => array(
 					'name'    => __( 'Style', 'podlove-subscribe-button' ),
-					'options' => \PodloveSubscribeButton\Model\Button::$style
+					'options' => Button::$style
 				),
 				'format'    => array(
 					'name'    => __( 'Format', 'podlove-subscribe-button' ),
-					'options' => \PodloveSubscribeButton\Model\Button::$format
+					'options' => Button::$format
 				),
 				'autowidth' => array(
 					'name'    => __( 'Autowidth', 'podlove-subscribe-button' ),
-					'options' => \PodloveSubscribeButton\Model\Button::$width
+					'options' => Button::$width
 				)
 			);
 
@@ -149,6 +158,4 @@ class Podlove_Subscribe_Button_Widget extends \WP_Widget {
 		return $instance;
 	}
 }
-add_action( 'widgets_init', function(){
-     register_widget( '\PodloveSubscribeButton\Podlove_Subscribe_Button_Widget' );
-});
+

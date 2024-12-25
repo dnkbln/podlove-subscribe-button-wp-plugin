@@ -1,6 +1,6 @@
 <?php
 
-namespace PodloveSubscribeButton;
+namespace PodloveSubscribeButton\Utils;
 
 function for_every_podcast_blog($callback) {
 	global $wpdb;

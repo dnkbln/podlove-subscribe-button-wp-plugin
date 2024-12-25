@@ -2,6 +2,11 @@
 
 namespace PodloveSubscribeButton\Settings;
 
+use PodloveSubscribeButton\Utils\MediaTypes;
+use PodloveSubscribeButton\Settings\ButtonListTable;
+use PodloveSubscribeButton\Model\Button;
+use PodloveSubscribeButton\Model\NetworkButton;
+
 class Buttons {
 
 	public static function page() {
@@ -10,7 +15,7 @@ class Buttons {
 		$is_network = is_network_admin();
 
 		if ( $action == 'confirm_delete' && null !== filter_input(INPUT_GET, 'button') ) {
-			$button = ( $is_network === true ? \PodloveSubscribeButton\Model\NetworkButton::find_by_id( (int) filter_input(INPUT_GET, 'button') ) : \PodloveSubscribeButton\Model\Button::find_by_id( (int) filter_input(INPUT_GET, 'button') ) );
+			$button = ( $is_network === true ? NetworkButton::find_by_id( (int) filter_input(INPUT_GET, 'button') ) : Button::find_by_id( (int) filter_input(INPUT_GET, 'button') ) );
 			?>
 			<div class="updated">
 				<p>
@@ -54,7 +59,7 @@ class Buttons {
 
 		$post = filter_input_array(INPUT_POST);
 
-		$button = ( filter_input(INPUT_GET, 'network') === '1' ? \PodloveSubscribeButton\Model\NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') ) : \PodloveSubscribeButton\Model\Button::find_by_id( filter_input(INPUT_GET, 'button') ) );
+		$button = ( filter_input(INPUT_GET, 'network') === '1' ? NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') ) : Button::find_by_id( filter_input(INPUT_GET, 'button') ) );
 		$button->update_attributes( $post['podlove_button'] );
 
 		if ( isset($post['submit_and_stay']) ) {
@@ -71,7 +76,7 @@ class Buttons {
 
 		$post = filter_input_array(INPUT_POST);
 
-		$button = ( filter_input(INPUT_GET, 'network') === '1' ? new \PodloveSubscribeButton\Model\NetworkButton : new \PodloveSubscribeButton\Model\Button );
+		$button = ( filter_input(INPUT_GET, 'network') === '1' ? new NetworkButton : new Button );
 		$button->update_attributes( $post['podlove_button'] );
 
 		if ( isset($post['submit_and_stay']) ) {
@@ -88,7 +93,7 @@ class Buttons {
 		if ( null ==  filter_input(INPUT_GET, 'button') )
 			return;
 
-		$button = ( filter_input(INPUT_GET, 'network') === '1' ? \PodloveSubscribeButton\Model\NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') ) : \PodloveSubscribeButton\Model\Button::find_by_id( filter_input(INPUT_GET, 'button') ) );
+		$button = ( filter_input(INPUT_GET, 'network') === '1' ? NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') ) : Button::find_by_id( filter_input(INPUT_GET, 'button') ) );
 		$button->delete();
 
 		self::redirect( 'index', null, array(), ( filter_input(INPUT_GET, 'network') === '1' ? true : false ) );
@@ -119,7 +124,7 @@ class Buttons {
 
         if (!wp_verify_nonce($_REQUEST['_psb_nonce'])) {
             return;
-        }            
+        }
 
 		if ( $action === 'save' ) {
 			self::save();
@@ -132,9 +137,9 @@ class Buttons {
 
 	public static function new_template() {
 		if ( filter_input(INPUT_GET, 'network') == '1' ) {
-			$button = new \PodloveSubscribeButton\Model\NetworkButton;
+			$button = new NetworkButton;
 		} else {
-			$button = new \PodloveSubscribeButton\Model\Button;
+			$button = new Button;
 		}
 
 		echo '<h3>' . __( 'New Subscribe button', 'podlove-subscribe-button' ) . '</h3>'.
@@ -144,9 +149,9 @@ class Buttons {
 
 	public static function edit_template() {
 		if ( filter_input(INPUT_GET, 'network') == '1' ) {
-			$button = \PodloveSubscribeButton\Model\NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') );
+			$button = NetworkButton::find_by_id( filter_input(INPUT_GET, 'button') );
 		} else {
-			$button = \PodloveSubscribeButton\Model\Button::find_by_id( filter_input(INPUT_GET, 'button') );
+			$button = Button::find_by_id( filter_input(INPUT_GET, 'button') );
 		}
 
 		echo '<h3>' . sprintf( __( 'Edit Subscribe button: %s', 'podlove-subscribe-button' ), sanitize_text_field($button->title) ) . '</h3>';
@@ -160,12 +165,12 @@ class Buttons {
 		<p><?php _e('Start by adding a button for each of your podcasts here. You can then add the button to your sidebar by adding the <a href="widgets.php">Podlove Subscribe Button widget</a>.', 'podlove-subscribe-button' ); ?></p>
 		<p><?php _e('If you want to display the button inside a page or article, you can also use the <code>[podlove-subscribe-button]</code> shortcode anywhere.', 'podlove-subscribe-button' ); ?></p>
 		<?php
-		$table = new \PodloveSubscribeButton\Button_List_Table;
+		$table = new ButtonListTable;
 		$table->prepare_items();
 		$table->display();
 
 		// Get the global button settings (with fallback to default values)
-		$settings = \PodloveSubscribeButton\Model\Button::get_global_setting_with_fallback();
+		$settings = Button::get_global_setting_with_fallback();
 
 		if ( ! $is_network ) :
 		?>
@@ -178,7 +183,7 @@ class Buttons {
 				<th scope="row"><label for="podlove_subscribe_button_default_size"><?php _e('Size', 'podlove-subscribe-button' ); ?></label></th>
 				<td>
 					<select name="podlove_subscribe_button_default_size" id="podlove_subscribe_button_default_size">
-						<?php foreach (\PodloveSubscribeButton\Model\Button::$size as $value => $description) : ?>
+						<?php foreach (Button::$size as $value => $description) : ?>
 							<option value="<?php echo $value; ?>" <?php echo ( $settings['size'] == $value ? "selected" : '' ); ?>><?php echo $description; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -200,7 +205,7 @@ class Buttons {
 				<th scope="row"><label for="podlove_subscribe_button_default_style"><?php _e('Style', 'podlove-subscribe-button' ); ?></label></th>
 				<td>
 					<select name="podlove_subscribe_button_default_style" id="podlove_subscribe_button_default_style">
-						<?php foreach (\PodloveSubscribeButton\Model\Button::$style as $value => $description) : ?>
+						<?php foreach (Button::$style as $value => $description) : ?>
 							<option value="<?php echo $value; ?>" <?php echo ( $settings['style'] == $value ? "selected" : '' ); ?>><?php echo $description; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -210,7 +215,7 @@ class Buttons {
 				<th scope="row"><label for="podlove_subscribe_button_default_format"><?php _e('Format', 'podlove-subscribe-button' ); ?></label></th>
 				<td>
 					<select name="podlove_subscribe_button_default_format" id="podlove_subscribe_button_default_format">
-						<?php foreach (\PodloveSubscribeButton\Model\Button::$format as $value => $description) : ?>
+						<?php foreach (Button::$format as $value => $description) : ?>
 							<option value="<?php echo $value; ?>" <?php echo ( $settings['format'] == $value ? "selected" : '' ); ?>><?php echo $description; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -322,7 +327,7 @@ class Buttons {
 						<td>
 							<select class="regular-text podlove-media-format" name="podlove_button[feeds][{{id}}][format]">
 								<?php
-									foreach (\PodloveSubscribeButton\MediaTypes::$audio as $id => $audio) {
+									foreach (MediaTypes::$audio as $id => $audio) {
 										echo "<option value='".$id."'>".$audio['title']."</option>\n";
 									}
 								?>

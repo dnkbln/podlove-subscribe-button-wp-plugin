@@ -1,5 +1,8 @@
 <?php
+
 namespace PodloveSubscribeButton\Model;
+
+use PodloveSubscribeButton\Model\Base;
 
 class Button extends Base {
 
@@ -109,10 +112,10 @@ class Button extends Base {
 			return $returnedFeeds;
 
 		foreach ($feeds as $feed) {
-			if ( isset(\PodloveSubscribeButton\MediaTypes::$audio[$feed['format']]['extension']) ) {
+			if ( isset(\PodloveSubscribeButton\Utils\MediaTypes::$audio[$feed['format']]['extension']) ) {
 				$new_feed = array(
 						'type' => 'audio',
-						'format' => \PodloveSubscribeButton\MediaTypes::$audio[$feed['format']]['extension'],
+						'format' => \PodloveSubscribeButton\Utils\MediaTypes::$audio[$feed['format']]['extension'],
 						'url' => $feed['url'],
 						'variant' => 'high'
 					);

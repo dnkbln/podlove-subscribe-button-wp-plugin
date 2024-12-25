@@ -1,11 +1,19 @@
 <?php
-namespace PodloveSubscribeButton;
+
+namespace PodloveSubscribeButton\Settings;
+
+use PodloveSubscribeButton\Settings\Buttons;
+use PodloveSubscribeButton\Model\Button;
+use PodloveSubscribeButton\Model\NetworkButton;
 
 if( ! class_exists( 'WP_List_Table' ) ){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class Button_List_Table extends \WP_List_Table {
+error_log('Loading ButtonListTable.php');
+error_log('Current namespace: ' . __NAMESPACE__);
+
+class ButtonListTable extends \WP_List_Table {
 
 	function __construct(){
 		global $status, $page;
@@ -21,8 +29,8 @@ class Button_List_Table extends \WP_List_Table {
 	function column_name( $button ) {
 
 		$actions = array(
-			'edit'   => Settings\Buttons::get_action_link( $button, __( 'Edit', 'podlove-subscribe-button' ), 'edit' ),
-			'delete' => Settings\Buttons::get_action_link( $button, __( 'Delete', 'podlove-subscribe-button' ), 'confirm_delete' )
+			'edit'   => Buttons::get_action_link( $button, __( 'Edit', 'podlove-subscribe-button' ), 'edit' ),
+			'delete' => Buttons::get_action_link( $button, __( 'Delete', 'podlove-subscribe-button' ), 'confirm_delete' )
 		);
 
 		return sprintf('%1$s %2$s',
@@ -76,7 +84,7 @@ class Button_List_Table extends \WP_List_Table {
 
 		// retrieve data
 		// TODO select data for current page only
-		$data = ( is_network_admin() ? \PodloveSubscribeButton\Model\NetworkButton::all() : \PodloveSubscribeButton\Model\Button::all() );
+		$data = ( is_network_admin() ? NetworkButton::all() : Button::all() );
 
 		// get current page
 		$current_page = $this->get_pagenum();

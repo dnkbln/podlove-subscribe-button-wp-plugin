@@ -12,32 +12,27 @@
  * Domain Path: /languages
  */
 
-$correct_php_version = version_compare( phpversion(), "5.3", ">=" );
+$correct_php_version = version_compare( phpversion(), "7.4", ">=" );
 
 if ( ! $correct_php_version ) {
-	printf( __( 'Podlove Subscribe Button Plugin requires %s or higher.<br>', 'podlove-subscribe-button' ), '<code>PHP 5.3</code>' );
+	printf( __( 'Podlove Subscribe Button Plugin requires %s or higher.<br>', 'podlove-subscribe-button' ), '<code>PHP 7.4</code>' );
 	echo '<br />';
 	printf( __( 'You are running %s', 'podlove-subscribe-button' ), '<code>PHP ' . phpversion() . '</code>' );
 	exit;
 }
 
+// Composer Autoloader
+require_once __DIR__ . '/vendor/autoload.php';
+$autoloader = require_once __DIR__ . '/vendor/autoload.php';
+error_log('Autoloader Configuration:');
+error_log(print_r($autoloader, true));
+
 // Constants
-require('constants.php');
-require('settings/buttons.php');
-// Models
-require('model/base.php');
-require('model/button.php');
-require('model/network_button.php');
-// Table
-require('settings/buttons_list_table.php');
-// Media Types
-require('media_types.php');
-// Widget
-require('widget.php');
+require('includes/Utils/constants.php');
 // Version control
-require('version.php');
+require('includes/Utils/Version.php');
 // Helper functions
-require('helper.php');
+require('includes/Utils/helper.php');
 
 add_action( 'admin_menu', array( 'PodloveSubscribeButton', 'admin_menu') );
 if ( is_multisite() )
