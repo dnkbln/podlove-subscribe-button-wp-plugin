@@ -2,9 +2,6 @@
 
 namespace PodloveSubscribeButton\Widget;
 
-error_log('Loading Widget.php');
-error_log('Current namespace: ' . __NAMESPACE__);
-
 use PodloveSubscribeButton\Model\Button;
 use PodloveSubscribeButton\Model\NetworkButton;
 

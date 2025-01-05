@@ -10,9 +10,6 @@ if( ! class_exists( 'WP_List_Table' ) ){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-error_log('Loading ButtonListTable.php');
-error_log('Current namespace: ' . __NAMESPACE__);
-
 class ButtonListTable extends \WP_List_Table {
 
 	function __construct(){

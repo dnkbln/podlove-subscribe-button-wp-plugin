@@ -1,9 +1,6 @@
 <?php
 	namespace PodloveSubscribeButton\Utils;
 
-	error_log('Loading MediaTypes.php');
-	error_log('Current namespace: ' . __NAMESPACE__);
-
 	class MediaTypes {
 		public static $audio = array(
 				0 => array(
