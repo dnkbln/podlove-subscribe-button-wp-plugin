@@ -5,8 +5,6 @@ namespace PodloveSubscribeButton;
 class PodloveSubscribeButton {
 
     public static function run() {
-        error_log('trace: PodloveSubscribeButton::run');
-
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
     }
 
@@ -17,9 +15,6 @@ class PodloveSubscribeButton {
         if ( ! in_array( $hook, $pages )  ) {
             return;
         }
-
-        error_log('trace: PodloveSubscribeButton::enqueue_scripts');
-        error_log(' hook' . $hook);
 
         // CSS Stylesheet
         wp_register_style( 'podlove-subscribe-button', plugin_dir_url( __FILE__ ) . '../style.css', false, '1.3.6' );
@@ -133,7 +128,7 @@ class PodloveSubscribeButton {
      * @return string
      */
     private static function get_attribute($attribute=null, $attribute_value=null) {
-        if ( empty($attribute_value) && ctype_alnum($attribute_value) && key_exists( $attribute_value, \PodloveSubscribeButton\Model\Button::$$attribute ) ) {
+        if ( isset($attribute_value) && ctype_alnum($attribute_value) && key_exists( $attribute_value, \PodloveSubscribeButton\Model\Button::$$attribute ) ) {
             return $attribute_value;
         } else {
             return get_option('podlove_subscribe_button_default_' . $attribute, \PodloveSubscribeButton\Model\Button::$properties[$attribute]);
