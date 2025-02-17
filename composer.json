@@ -22,7 +22,7 @@
         }
     },
     "scripts": {
-        "phpcs": "phpcs --standard=WordPress",
+        "phpcs": "phpcs --standard=PSR2 includes",
         "phpcbf": "phpcbf --standard=WordPress",
         "test": "phpunit"
     },

@@ -1,5 +1,7 @@
 <?php
 
+namespace PodloveSubscribeButton\Tests;
+
 use PHPUnit\Framework\TestCase;
 use PodloveSubscribeButton\Settings\Buttons;
 use PodloveSubscribeButton\Model\Button;
