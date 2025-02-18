@@ -32,4 +32,11 @@ add_action( 'plugins_loaded', function () {
     load_plugin_textdomain( 'podlove-subscribe-button', false, dirname(plugin_basename( __FILE__)) . '/languages/');
 } );
 
+add_action('rest_api_init', function () {
+    $button = new \PodloveSubscribeButton\API\Button_Controller();
+    $button->register_routes();
+    $networkbutton = new \PodloveSubscribeButton\API\NetworkButton_Controller();
+    $networkbutton->register_routes();
+});
+
 PodloveSubscribeButton::run();
