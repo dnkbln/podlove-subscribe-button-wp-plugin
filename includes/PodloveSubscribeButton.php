@@ -4,10 +4,6 @@ namespace PodloveSubscribeButton;
 
 class PodloveSubscribeButton {
 
-    public static function run() {
-        add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
-    }
-
     public static function enqueue_assets( $hook ) {
 
         $pages = array( 'settings_page_podlove-subscribe-button', 'widgets.php' );
@@ -30,6 +26,12 @@ class PodloveSubscribeButton {
         );
         wp_localize_script( 'podlove-subscribe-button-admin-tools', 'i18n', $js_translations );
         wp_enqueue_script( 'podlove-subscribe-button-admin-tools' );
+
+        // Vue UI
+        $version = '0.0.1';
+        wp_register_script('podlove-subscribe-button-client', plugin_dir_url(__FILE__).'../client/dist/main.js', [], $version, false);
+        wp_enqueue_script('podlove-subscribe-button-client');
+        wp_enqueue_style('podlove-subscribe-button-client', plugin_dir_url(__FILE__).'../client/dist/style.css', [], $version);
     }
 
     public static function admin_menu() {

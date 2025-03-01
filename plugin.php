@@ -1,7 +1,6 @@
 <?php
 
 namespace PodloveSubscribeButton;
-use PodloveSubscribeButton\PodloveSubscribeButton;
 
 add_action( 'admin_menu', array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'admin_menu') );
 if ( is_multisite() )
@@ -28,6 +27,8 @@ add_action( 'admin_init', function () {
 
 add_shortcode( 'podlove-subscribe-button', array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'shortcode' ) );
 
+add_action( 'admin_enqueue_scripts', array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'enqueue_assets' ) );
+
 add_action( 'plugins_loaded', function () {
     load_plugin_textdomain( 'podlove-subscribe-button', false, dirname(plugin_basename( __FILE__)) . '/languages/');
 } );
@@ -38,5 +39,3 @@ add_action('rest_api_init', function () {
     $networkbutton = new \PodloveSubscribeButton\API\NetworkButton_Controller();
     $networkbutton->register_routes();
 });
-
-PodloveSubscribeButton::run();
