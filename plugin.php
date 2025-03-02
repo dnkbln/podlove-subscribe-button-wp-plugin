@@ -39,3 +39,7 @@ add_action('rest_api_init', function () {
     $networkbutton = new \PodloveSubscribeButton\API\NetworkButton_Controller();
     $networkbutton->register_routes();
 });
+
+add_action( 'init', function() {
+    register_block_type( __DIR__ . '/block/build/podlove-subscribe-button-block' );
+});
