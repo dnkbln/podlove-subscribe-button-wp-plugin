@@ -10,6 +10,8 @@ export default defineConfig({
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
+      '@store': path.resolve(root, 'src', 'store'),
+      '@sagas': path.resolve(root, 'src', 'sagas'),
     }
   },
   build: {

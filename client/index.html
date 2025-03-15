@@ -11,5 +11,20 @@
       <subscribe-button-overview></subscribe-button-overview>
     </div>
     <script type="module" src="./src/main.ts"></script>
+    <script>
+      const user = 'dirk' // the user name NOT the token name
+      const applicationPassword = `TE6N yCPr 2XTP 976D uamU MKkK`
+
+      window.addEventListener('load', () => {
+        window.initSubscribeUI({
+          baseUrl: 'http://subscribe-button.local',
+          api: {
+            base: 'http://subscribe-button.local/wp-json/podlove/subscribe',
+            auth: btoa(`${user}:${applicationPassword}`),
+          },
+        })
+      })
+    </script>
+
   </body>
 </html>

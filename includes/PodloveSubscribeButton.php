@@ -30,6 +30,14 @@ class PodloveSubscribeButton {
         // Vue UI
         $version = '0.0.1';
         wp_register_script('podlove-subscribe-button-client', plugin_dir_url(__FILE__).'../client/dist/main.js', [], $version, false);
+        add_filter('subscribe_data_js', function ($data) {
+            $data['api'] = [
+                'base' => esc_url_raw(rest_url('podlove/subscribe')),
+                'nonce' => wp_create_nonce('wp_rest'),
+            ];
+
+            return $data;
+        });
         wp_enqueue_script('podlove-subscribe-button-client');
         wp_enqueue_style('podlove-subscribe-button-client', plugin_dir_url(__FILE__).'../client/dist/style.css', [], $version);
     }

@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
+import { store } from './store'
+import { init } from './store/lifecycle.store'
 import modules from './modules'
 
 import './style.css'
-
 
 window.addEventListener("load", () => {
   document
@@ -20,3 +21,6 @@ window.addEventListener("load", () => {
     });
 });
 
+(globalThis as any).initSubscribeUI = (data: any) => {
+  store.dispatch(init(data))
+}

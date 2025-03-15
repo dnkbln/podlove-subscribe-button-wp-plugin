@@ -33,6 +33,24 @@ add_action( 'plugins_loaded', function () {
     load_plugin_textdomain( 'podlove-subscribe-button', false, dirname(plugin_basename( __FILE__)) . '/languages/');
 } );
 
+add_action('admin_head', function() {
+    $data = apply_filters('subscribe_data_js', []); ?>
+
+    <script>
+      window.SUBSCRIBE_DATA = window.SUBSCRIBE_DATA || { baseUrl: '<?php echo home_url(); ?>' };
+      <?php foreach ($data as $key => $value) { ?>
+          window.SUBSCRIBE_DATA['<?php echo $key; ?>'] = <?php echo wp_json_encode($value); ?>;
+      <?php } ?>
+
+      window.addEventListener('load', function () {
+        if (window.initSubscribeUI) {
+          window.initSubscribeUI(window.SUBSCRIBE_DATA);
+        }
+      })
+    </script>
+    <?php
+}, 3);
+
 add_action('rest_api_init', function () {
     $button = new \PodloveSubscribeButton\API\Button_Controller();
     $button->register_routes();

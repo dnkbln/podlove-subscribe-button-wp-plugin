@@ -43,6 +43,9 @@ class Buttons {
 			}
 			?>
 		</div>
+		<div data-client="podlove-subscribe-button">
+      		<subscribe-button-overview></subscribe-button-overview>
+    	</div>
 		<?php
 	}
 
