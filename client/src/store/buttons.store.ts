@@ -1,4 +1,4 @@
-import { createAction, handleActions } from "redux-actions"
+import { createAction, handleActions, Action } from "redux-actions"
 import { SubscribeButton } from "src/types/buttons.types"
 
 export type State = {
@@ -15,10 +15,10 @@ export const SET = 'podlove/subscribe/buttons/SET'
 export const init = createAction<void>(INIT);
 export const set = createAction<SubscribeButton[]>(SET)
 
-export const reducer = handleActions({
-    [SET]: (state: State, action: { payload: SubscribeButton[] }): State => ({
+export const reducer = handleActions<State, any>({
+    [SET]: (state, { payload }: Action<SubscribeButton[]>) => ({
         ...state,
-        buttons: action.payload
+        buttons: payload
     })
 }, initialState);
 

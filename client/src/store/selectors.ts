@@ -27,7 +27,7 @@ const runtime = {
 }
 
 export default {
-  buttons,
   lifecycle,
-  runtime
+  runtime,
+  buttons
 }

@@ -12,6 +12,40 @@
  * Domain Path: /languages
  */
 
+ if (!function_exists('podlove_log_with_stack_trace')) {
+    function podlove_log_with_stack_trace($message) {
+        // Basis-Lognachricht
+        $logMessage = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
+
+        // Stack-Trace abrufen
+        $backtrace = debug_backtrace();
+        $stackTrace = '';
+
+        foreach ($backtrace as $key => $trace) {
+            $file = isset($trace['file']) ? $trace['file'] : '[No File]';
+            $line = isset($trace['line']) ? $trace['line'] : '[No Line]';
+            $function = isset($trace['function']) ? $trace['function'] : '[No Function]';
+
+            $stackTrace .= "#{$key} {$file} ({$line}): {$function}()" . PHP_EOL;
+        }
+
+        // Stack-Trace zur Lognachricht hinzufügen
+        $logMessage .= "Stack Trace:" . PHP_EOL . $stackTrace . PHP_EOL;
+
+        // In die PHP-Error-Log schreiben
+        error_log($logMessage);
+    }
+}
+
+if (!function_exists('podlove_log_without_stack_trace')) {
+    function podlove_log_without_stack_trace($message) {
+        // Basis-Lognachricht
+        $logMessage = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
+        // In die PHP-Error-Log schreiben
+        error_log($logMessage);
+    }
+}
+
 function load_podlove_subscribe_button()
 {
     require_once __DIR__ . '/vendor/autoload.php'; // composer

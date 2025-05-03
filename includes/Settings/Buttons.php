@@ -42,10 +42,11 @@ class Buttons {
 				default:      self::view_template(); break;
 			}
 			?>
+			<div data-client="podlove-subscribe-button">
+    	  		<subscribe-button-overview></subscribe-button-overview>
+				<subscribe-button-list></subscribe-button-list>
+    		</div>
 		</div>
-		<div data-client="podlove-subscribe-button">
-      		<subscribe-button-overview></subscribe-button-overview>
-    	</div>
 		<?php
 	}
 

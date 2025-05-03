@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { provideStore } from 'redux-vuex'
 import { store } from './store'
 import { init } from './store/lifecycle.store'
 import modules from './modules'
@@ -16,6 +17,8 @@ window.addEventListener("load", () => {
           ...modules,
         },
       });
+
+      provideStore({ store, app })
 
       app.mount(elem);
     });
