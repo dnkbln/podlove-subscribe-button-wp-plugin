@@ -6,7 +6,7 @@
     </div>
 
     <div class="w-24 text-center">
-      <MegaphoneIcon class="inline-block w-10" />
+      <preview :button="props.button" :key="props.button.id"></preview>
     </div>
 
     <div class="w-16 text-right">
@@ -22,7 +22,7 @@
             class="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-50">
             <div class="px-1 py-1">
               <MenuItem v-slot="{ active }">
-              <button :class="[
+              <button @click="openEdit" :class="[
                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                 active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
               ]">
@@ -43,19 +43,34 @@
       </Menu>
     </div>
   </li>
-
+  <Modal :open="modalOpen" @close="closeEdit">
+      <edit :button="props.button"></edit>
+  </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon, MegaphoneIcon } from '@heroicons/vue/20/solid'
-
+import { ref } from 'vue'
 import { SubscribeButton } from '../../../types/buttons.types'
+
+import Modal from '../../../components/modal/Modal.vue';
+import edit from './ButtonEdit.vue'
+import preview from './ButtonPreview.vue'
+
+const modalOpen = ref(false);
 
 const props = defineProps<{
   button: SubscribeButton;
 }>();
+
+function openEdit() {
+    modalOpen.value = true
+}
+
+function closeEdit() {
+    modalOpen.value = false
+}
 
 </script>

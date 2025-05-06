@@ -21,7 +21,6 @@ function* initialize(api: SubscribeApiClient) {
     yield put(buttons.set(result))
 }
 
-
 export default function () {
     return function* () {
       yield takeFirst(lifecycle.INIT, buttonsSaga)
