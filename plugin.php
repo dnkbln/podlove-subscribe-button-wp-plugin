@@ -6,7 +6,6 @@ add_action( 'admin_menu', array( 'PodloveSubscribeButton\PodloveSubscribeButton'
 if ( is_multisite() )
     add_action( 'network_admin_menu', array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'admin_network_menu') );
 
-add_action( 'admin_init', array( 'PodloveSubscribeButton\Settings\Buttons', 'process_form' ) );
 register_activation_hook( __FILE__, array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'build_models' ) );
 
 // Register Settings

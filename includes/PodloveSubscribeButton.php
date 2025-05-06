@@ -48,7 +48,7 @@ class PodloveSubscribeButton {
                 'Podlove Subscribe Button',
                 'manage_options',
                 'podlove-subscribe-button',
-                array( 'PodloveSubscribeButton\Settings\Buttons', 'page')
+                array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'page')
             );
     }
 
@@ -59,7 +59,7 @@ class PodloveSubscribeButton {
                 'Podlove Subscribe Button',
                 'manage_options',
                 'podlove-subscribe-button',
-                array( 'PodloveSubscribeButton\Settings\Buttons', 'page')
+                array( 'PodloveSubscribeButton\PodloveSubscribeButton', 'page')
             );
     }
 
@@ -165,5 +165,16 @@ class PodloveSubscribeButton {
         } elseif ( 'on' == $input ) {
             return $input;
         }
+    }
+
+    public static function page() {
+        ?>
+        <div style="padding-top: 1rem; padding-right: 1rem" >
+            <div data-client="podlove-subscribe-button">
+                <subscribe-button-overview></subscribe-button-overview>
+                <subscribe-button-list></subscribe-button-list>
+            </div>
+        </div>
+        <?php
     }
 }
