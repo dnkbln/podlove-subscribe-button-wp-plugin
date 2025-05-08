@@ -3,11 +3,13 @@ import { State } from './index'
 import * as lifecycleStore from './lifecycle.store'
 import * as runtimeStore from './runtime.store'
 import * as buttonsStore from './buttons.store'
+import * as settingsStore from './settings.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
   runtime: (state: State) => state.runtime,
-  buttons: (state: State) => state.buttons
+  buttons: (state: State) => state.buttons,
+  settings: (state: State) => state.settings
 }
 
 const buttons = {
@@ -26,8 +28,13 @@ const runtime = {
   bearer: createSelector(root.runtime, runtimeStore.selectors.bearer),
 }
 
+const settings = {
+  settings: createSelector(root.settings, settingsStore.selectors.settings)
+}
+
 export default {
   lifecycle,
   runtime,
-  buttons
+  buttons,
+  settings
 }

@@ -13,15 +13,18 @@ declare global {
   import { State as buttonsState } from './buttons.store'
   import { State as lifecycleState } from './lifecycle.store'
   import { State as runtimeState } from './runtime.store'
+  import { State as settingsState } from './settings.store'
 
   import buttonsSaga from '../sagas/buttons.sagas'
   import lifecycleSaga from '../sagas/lifecycle.sagas'
   import notificationSaga from '../sagas/notification.sagas'
+  import settingsSaga from '../sagas/settings.sagas'
 
   export interface State {
     lifecycle: lifecycleState
     runtime: runtimeState
     buttons: buttonsState
+    settings: settingsState
   }
 
   const sagas = createSagaMiddleware()
@@ -32,5 +35,6 @@ declare global {
   sagas.run(lifecycleSaga())
   sagas.run(notificationSaga())
   sagas.run(buttonsSaga())
+  sagas.run(settingsSaga())
 
   export { selectors, sagas }
