@@ -141,7 +141,7 @@ class PodloveSubscribeButton {
         if ( isset($attribute_value) && ctype_alnum($attribute_value) && key_exists( $attribute_value, \PodloveSubscribeButton\Model\Button::$$attribute ) ) {
             return $attribute_value;
         } else {
-            return get_option('podlove_subscribe_button_default_' . $attribute, \PodloveSubscribeButton\Model\Button::$properties[$attribute]);
+            return get_option('podlove_subscribe_button_default_' . $attribute, \PodloveSubscribeButton\Model\Button::$defaultSettings[$attribute]);
         }
     }
 

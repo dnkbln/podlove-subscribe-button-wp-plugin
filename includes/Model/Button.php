@@ -6,7 +6,7 @@ use PodloveSubscribeButton\Model\Base;
 
 class Button extends Base {
 
-    public static $properties = array(
+    public static $defaultSettings = array(
         // $property => $default value
         'size' => 'big',
         'color' => '#599677',
@@ -65,7 +65,10 @@ class Button extends Base {
      * @return array
      */
     public static function get_global_setting_with_fallback( $settings=array() ) {
-        foreach (self::$properties as $property => $default) {
+        foreach (self::$defaultSettings as $property) {
+            podlove_log_without_stack_trace($property);
+        }
+        foreach (self::$defaultSettings as $property => $default) {
             $settings[$property] = ( get_option('podlove_subscribe_button_default_' . $property) ? get_option('podlove_subscribe_button_default_' . $property) : $default );
         }
 
