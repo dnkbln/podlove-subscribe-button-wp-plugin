@@ -24,7 +24,7 @@
               leave-from="opacity-100"
               leave-to="opacity-0"
             >
-              <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+              <DialogOverlay class="fixed inset-0 bg-black/40 transition-opacity" />
             </TransitionChild>
 
             <!-- This element is to trick the browser into centering the modal contents. -->
@@ -59,7 +59,7 @@
                 "
                 :class="{
                   'sm:max-w-sm': size === 'small',
-                  'sm:max-w-xl': size === 'medium'
+                  'sm:max-w-3/4': size === 'medium'
                 }"
               >
                 <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
@@ -70,7 +70,7 @@
                       rounded-md
                       text-gray-400
                       hover:text-gray-500
-                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                      focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
                     "
                     @click="close()"
                   >

@@ -7,7 +7,7 @@
             {{ title }}
           </h3>
         </div>
-        <div class="ml-4 mt-2 flex flex-shrink-0">
+        <div class="ml-4 mt-2 flex shrink-0">
           <slot name="actions"></slot>
         </div>
       </div>

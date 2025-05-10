@@ -19,7 +19,7 @@
           enter-to="transform opacity-100 scale-100" leave="transition ease-in duration-75"
           leave-from="transform opacity-100 scale-100" leave-to="transform opacity-0 scale-95">
           <MenuItems
-            class="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-50">
+            class="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-hidden z-50">
             <div class="px-1 py-1">
               <MenuItem v-slot="{ active }">
               <button @click="openEdit" :class="[
