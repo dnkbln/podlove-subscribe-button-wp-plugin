@@ -1,6 +1,6 @@
 <template>
     <podlove-button variant="secondary" size="small" @click="openAddButton()">Add new</podlove-button>
-    <Modal :open="modalOpen" @close="closeAddButton()">
+    <Modal size="medium" :open="modalOpen" @close="closeAddButton()">
         <h1>Add New Button Page</h1>
     </Modal>
 </template>

@@ -59,7 +59,7 @@
                 "
                 :class="{
                   'sm:max-w-sm': size === 'small',
-                  'sm:max-w-md': size === 'medium'
+                  'sm:max-w-xl': size === 'medium'
                 }"
               >
                 <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
@@ -96,7 +96,7 @@
     size?: string
   }>(), {
     open: true,
-    size: 'small',
+    size: 'medium',
   })
 
   const emit = defineEmits<{
