@@ -203,3 +203,8 @@ Button::property( 'subtitle', 'VARCHAR(255)' );
 Button::property( 'description', 'TEXT' );
 Button::property( 'cover', 'VARCHAR(255)' );
 Button::property( 'feeds', 'TEXT' );
+Button::property( 'size', 'VARCHAR(255)' );
+Button::property( 'autowidth', 'BOOLEAN' );
+Button::property( 'color', 'VARCHAR(255)' );
+Button::property( 'style', 'VARCHAR(255)' );
+Button::property( 'format', 'VARCHAR(255)' );

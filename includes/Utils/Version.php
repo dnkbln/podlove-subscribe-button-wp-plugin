@@ -39,7 +39,7 @@
 
 namespace PodloveSubscribeButton;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 2 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 3 );
 
 add_action( 'admin_init', '\PodloveSubscribeButton\maybe_run_database_migrations' );
 add_action( 'admin_init', '\PodloveSubscribeButton\run_database_migrations', 5 );
@@ -80,6 +80,26 @@ function migrate_for_current_blog() {
 }
 
 /**
+ * Execute migration query. Captures error if one occurs.
+ *
+ * @param string $sql
+ */
+function podlove_do_migration_query($sql) {
+    global $wpdb;
+
+    $success = $wpdb->query($sql);
+
+    if ($success === false) {
+        update_option('podlove_subscribe_db_migration_error', [
+            'error' => $wpdb->last_error,
+            'query' => $wpdb->last_query,
+        ]);
+    }
+
+    return (bool) $success;
+}
+
+/**
  * Find and run migration for given version number.
  *
  * @todo  move migrations into separate files
@@ -90,6 +110,51 @@ function run_migrations_for_version( $version ) {
 
     global $wpdb;
 
-    switch ( $version ) {}
+    switch ( $version ) {
+        case 3:
+            $sql1 = sprintf(
+                'ALTER TABLE `%s`ADD COLUMN `size` VARCHAR(255)',
+                Model\Button::table_name()
+            );
+            $sql2 = sprintf(
+                'ALTER TABLE `%s`ADD COLUMN `autowidth` BOOLEAN',
+                Model\Button::table_name()
+            );
+            $sql3 = sprintf(
+                'ALTER TABLE `%s`ADD COLUMN `color` VARCHAR(255)',
+                Model\Button::table_name()
+            );
+            $sql4 = sprintf(
+                'ALTER TABLE `%s`ADD COLUMN `style` VARCHAR(255)',
+                Model\Button::table_name()
+            );
+            $sql5 = sprintf(
+                'ALTER TABLE `%s`ADD COLUMN `format` VARCHAR(255)',
+                Model\Button::table_name()
+            );
+
+            podlove_do_migration_query($sql1);
+            podlove_do_migration_query($sql2);
+            podlove_do_migration_query($sql3);
+            podlove_do_migration_query($sql4);
+            podlove_do_migration_query($sql5);
+
+            $default_size = get_option('podlove_subscribe_button_default_size');
+            $default_autowidth = get_option('podlove_subscribe_button_default_autowidth');
+            $default_color = get_option('podlove_subscribe_button_default_color');
+            $default_style = get_option('podlove_subscribe_button_default_style');
+            $default_format = get_option('podlove_subscribe_button_default_format');
+
+            $buttons = Model\Button::all();
+            foreach($buttons as $button) {
+                $button->size = $default_size;
+                $button->autowidth = $default_autowidth;
+                $button->color = $default_color;
+                $button->style = $default_style;
+                $button->format = $default_format;
+                $button->save();
+            }
+            break;
+    }
 
 }
