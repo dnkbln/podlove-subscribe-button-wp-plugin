@@ -14,7 +14,7 @@ function* buttonsSaga(): any {
     const apiClient: SubscribeApiClient = yield createApi()
     yield fork(initialize, apiClient)
 
-    yield takeEvery(buttons.UPDATE, save, apiClient)
+    yield takeEvery([buttons.UPDATE, buttons.UPDATE_ITEM], save, apiClient)
     yield takeEvery(buttons.ADD, create, apiClient)
 }
 
@@ -23,7 +23,7 @@ function* save(api: SubscribeApiClient) {
 
     yield all(
         buttons.map((button: SubscribeButton) =>
-            call([api, api.put], 'buttons', button)
+            call([api, api.put], `buttons/${button.id}`, button)
         )
     )
 }

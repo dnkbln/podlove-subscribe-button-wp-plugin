@@ -37,6 +37,7 @@ onMounted(async () => {
     script.setAttribute('data-style', state.settings.style)
     script.setAttribute('data-format', state.settings.format)
     script.setAttribute('data-color', state.settings.color)
+    script.setAttribute('data-autowidth', state.settings.autowidth)
     script.setAttribute('data-json-data', dataVar)
     script.setAttribute('data-language', 'en')
 
