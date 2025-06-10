@@ -12,21 +12,6 @@ class PodloveSubscribeButton {
             return;
         }
 
-        // CSS Stylesheet
-        wp_register_style( 'podlove-subscribe-button', plugin_dir_url( __FILE__ ) . '../style.css', false, '1.3.6' );
-        wp_enqueue_style( 'podlove-subscribe-button' );
-
-        // Admin JS
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_register_script( 'podlove-subscribe-button-admin-tools', plugin_dir_url( __FILE__ ) . '../js/admin.js', array( 'jquery', 'wp-color-picker' ), '1.3.6' );
-
-        $js_translations = array(
-            'media_library' => __( 'Media Library', 'podlove-subscribe-button' ),
-            'use_for'       => __( 'Use for Podcast Cover Art', 'podlove-subscribe-button' ),
-        );
-        wp_localize_script( 'podlove-subscribe-button-admin-tools', 'i18n', $js_translations );
-        wp_enqueue_script( 'podlove-subscribe-button-admin-tools' );
-
         // Vue UI
         $version = '0.0.1';
         wp_register_script('podlove-subscribe-button-client', plugin_dir_url(__FILE__).'../client/dist/main.js', [], $version, false);

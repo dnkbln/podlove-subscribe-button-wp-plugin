@@ -60,7 +60,7 @@ class Button_Controller extends WP_REST_Controller
                     'cover' => [
                         'description' => __('An url for the episode cover', 'podlove-subscribe-button-plugin-for-wordpress'),
                         'type' => 'string',
-                        'validate_callback' => '\PodloveSubscribeButton\Util\API\Validation::url'
+                        'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::url'
                     ],
                     'feeds' => [
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-subscribe-button-plugin-for-wordpress'),
@@ -76,7 +76,7 @@ class Button_Controller extends WP_REST_Controller
                                     'description' => __('Feed url', 'podlove-subscribe-button-plugin-for-wordpress'),
                                     'type' => 'string',
                                     'required' => 'true',
-                                    'validate_callback' => '\PodloveSubscribeButton\Util\API\Validation::url'
+                                    'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::url'
                                 ],
                                 'applefeedid' => [
                                     'description' => __('Apple Podcast ID', 'podlove-subscribe-button-plugin-for-wordpress'),

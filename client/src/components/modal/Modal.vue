@@ -1,18 +1,17 @@
 <template>
     <TransitionRoot as="template" :show="open">
-      <Dialog as="div" @close="close()" data-client="podlove">
+      <Dialog as="div" @close="close()">
         <div class="fixed inset-0 overflow-y-auto font-sans" style="z-index: 10000;">
           <div
             class="
               flex
-              items-end
+              place-items-center
               justify-center
               min-h-screen
               pt-4
               px-4
               pb-20
               text-center
-              sm:block sm:p-0
             "
           >
             <TransitionChild
@@ -62,7 +61,7 @@
                   'sm:max-w-3/4': size === 'medium'
                 }"
               >
-                <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+                <div class="sm:block absolute top-0 right-0 pt-4 pr-4">
                   <button
                     type="button"
                     class="
