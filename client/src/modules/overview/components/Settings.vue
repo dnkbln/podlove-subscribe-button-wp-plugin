@@ -6,9 +6,16 @@
 </template>
 
 <script setup lang="ts">
+import { mapState } from 'redux-vuex';
+import { selectors } from '../../../store';
+
 import Modal from '../../../components/modal/Modal.vue';
 import PodloveButton from '../../../components/button/Button.vue'
 import { ref } from 'vue'
+
+const state = mapState({
+  settings: selectors.settings.settings
+});
 
 const modalEdit = ref(false);
 
