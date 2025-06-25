@@ -6,7 +6,7 @@
     </div>
 
     <div class="w-24 text-center">
-      <preview :button="props.button" :key="props.button.id"></preview>
+      <ButtonPreview :button="props.button" :key="props.button.id"></ButtonPreview>
     </div>
 
     <div class="w-16 text-right">
@@ -30,7 +30,7 @@
               </button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-              <button :class="[
+              <button @click="deleteButtonItem" :class="[
                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                 active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
               ]">
@@ -44,7 +44,7 @@
     </div>
   </li>
   <Modal :open="modalOpen" @close="closeEdit">
-      <edit :button="props.button"></edit>
+      <ButtonEdit :button="props.button"></ButtonEdit>
   </Modal>
 </template>
 
@@ -53,13 +53,16 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon, MegaphoneIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue'
-import { SubscribeButton } from '../../../types/buttons.types'
+import { injectStore } from 'redux-vuex';
 
+import { SubscribeButton } from '../../../types/buttons.types'
 import Modal from '../../../components/modal/Modal.vue';
-import edit from './ButtonEdit.vue'
-import preview from './ButtonPreview.vue'
+import ButtonEdit from './ButtonEdit.vue'
+import ButtonPreview from './ButtonPreview.vue'
+import { deleteButton } from '../../../store/buttons.store';
 
 const modalOpen = ref(false);
+const store = injectStore();
 
 const props = defineProps<{
   button: SubscribeButton;
@@ -71,6 +74,10 @@ function openEdit() {
 
 function closeEdit() {
     modalOpen.value = false
+}
+
+function deleteButtonItem() {
+  store.dispatch( deleteButton(props.button) )
 }
 
 </script>

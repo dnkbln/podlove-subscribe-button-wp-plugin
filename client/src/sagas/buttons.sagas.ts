@@ -14,8 +14,65 @@ function* buttonsSaga(): any {
     const apiClient: SubscribeApiClient = yield createApi()
     yield fork(initialize, apiClient)
 
-    yield takeEvery([buttons.UPDATE, buttons.UPDATE_ITEM], save, apiClient)
-    yield takeEvery(buttons.ADD, create, apiClient)
+    yield takeEvery(buttons.ADD, add, apiClient)
+    yield takeEvery(buttons.UPDATE_ITEM, save, apiClient)
+    yield takeEvery(buttons.ADD_OR_UPDATE_REQUEST, addOrUpdateButton, apiClient)
+    yield takeEvery(buttons.DELETE, deleteButton, apiClient)
+}
+
+function* addOrUpdateButton(api: SubscribeApiClient, action: Action) {
+  const button: SubscribeButton = get(action, ['payload']);
+
+  if (!button.id) {
+    // Neuen Button erstellen
+    const { result: createResult, error: createError } = yield call(
+      [api, api.post],
+      'buttons',
+      {}
+    );
+
+    if (createError || !createResult?.id) {
+      console.error('Fehler beim Erstellen des Buttons:', createError);
+      return;
+    }
+
+    const newButtonWithId = {
+      ...button,
+      id: createResult.id,
+    };
+
+    yield call(
+      [api, api.put],
+      `buttons/${createResult.id}`,
+      newButtonWithId
+    );
+
+    yield put(buttons.add_or_update_success(newButtonWithId));
+  } else {
+    // Existierenden Button updaten
+    yield call(
+      [api, api.put],
+      `buttons/${button.id}`,
+      button
+    );
+
+    yield put(buttons.add_or_update_success(button));
+  }
+}
+
+function* add(api: SubscribeApiClient) {
+  const { result: createResult, error: createError } = yield call(
+    [api, api.post],
+    "buttons",
+    {}
+  );
+
+  if (createError || !createResult?.id) {
+    console.error("Fehler beim Erstellen des Buttons:", createError);
+    return;
+  }
+
+  yield put(buttons.set_last_created_id(createResult.id))
 }
 
 function* save(api: SubscribeApiClient) {
@@ -28,25 +85,11 @@ function* save(api: SubscribeApiClient) {
     )
 }
 
-function* create(api: SubscribeApiClient, action: Action) {
-    const newButton: SubscribeButton = get(action, ['payload'])
-
-    const { result: createResult, error: createError } = yield call(
-        [api, api.post],
-        'buttons',
-        {}
-    );
-
-    if (createError || !createResult?.id) {
-      console.error("Fehler beim Erstellen des Buttons:", createError);
-      return;
-    }
-
-    yield call(
-        [api, api.put],
-        `buttons/${createResult.id}`,
-        newButton
-    );
+function* deleteButton(api: SubscribeApiClient, action: Action) {
+  const button: SubscribeButton = get(action, ['payload']);
+  if (button) {
+    yield call([api, api.delete], `buttons/${button.id}`)
+  }
 }
 
 function* initialize(api: SubscribeApiClient) {

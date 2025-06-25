@@ -13,7 +13,8 @@ const root = {
 }
 
 const buttons = {
-  buttons: createSelector(root.buttons, buttonsStore.selectors.buttons)
+  buttons: createSelector(root.buttons, buttonsStore.selectors.buttons),
+  lastCreatedId: createSelector(root.buttons, buttonsStore.selectors.lastCreatedId)
 }
 
 const lifecycle = {

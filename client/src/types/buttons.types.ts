@@ -6,6 +6,11 @@ export interface SubscribeButton {
     description: string | null
     cover: string | null
     feeds: Feed[]
+    size: string | null
+    autowidth: boolean | null
+    color: string | null
+    style: string | null
+    format: string | null
 }
 
 export interface Feed {

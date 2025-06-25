@@ -1,37 +1,36 @@
 <template>
     <podlove-button variant="secondary" size="small" @click="openAddButton()">Add new</podlove-button>
     <Modal size="medium" :open="modalOpen" @close="closeAddButton()">
-        <div>
-            <div class="px-4 sm:px-0">
-                <h3 class="text-base/7 font-semibold text-gray-900">Podlove Subscribe Button</h3>
-                <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Podcast informations</p>
-                <div class="p-3">
-                    <ButtonID :button="button" class="mb-5"></ButtonID>
-                    <PodcastTitle :button="button" class="mb-5"></PodcastTitle>
-                    <PodcastSubtitle :button="button" class="mb-5"></PodcastSubtitle>
-                    <PodcastDescription :button="button" class="mb-5"></PodcastDescription>
-                </div>
-            </div>
-        </div>
-
+        <ButtonEdit :button="button"></ButtonEdit>
     </Modal>
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { injectStore, mapState } from 'redux-vuex';
+
+import { SubscribeButton } from '../../../types/buttons.types';
 import Modal from '../../../components/modal/Modal.vue';
 import PodloveButton from '../../../components/button/Button.vue'
-import ButtonID from './ButtonID.vue';
-import PodcastTitle from './PodcastTitle.vue';
-import PodcastSubtitle from './PodcastSubtitle.vue';
-import PodcastDescription from './PodcastDescription.vue';
+import ButtonEdit from './ButtonEdit.vue';
+import { add as addButton } from '../../../store/buttons.store';
+import { selectors } from '../../../store';
 
-import { SubscribeButton } from 'src/types/buttons.types';
-import { reactive, ref } from 'vue'
+const store = injectStore();
+
+const state = mapState({
+  buttons: selectors.buttons.buttons,
+  lastCreatedId: selectors.buttons.lastCreatedId
+});
 
 const modalOpen = ref(false);
-const button = reactive(({id: "10", name: null, title: null, subtitle: null, description: null, cover: null, feeds: []}) as SubscribeButton)
+
+const button = computed(() => {
+  return state.buttons.find((b: SubscribeButton) => b.id === state.lastCreatedId.value) || null;
+});
 
 function openAddButton() {
+    store.dispatch(addButton())
     modalOpen.value = true
 }
 
