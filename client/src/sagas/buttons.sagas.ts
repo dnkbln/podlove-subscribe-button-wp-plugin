@@ -16,49 +16,9 @@ function* buttonsSaga(): any {
 
     yield takeEvery(buttons.ADD, add, apiClient)
     yield takeEvery(buttons.UPDATE_ITEM, save, apiClient)
-    yield takeEvery(buttons.ADD_OR_UPDATE_REQUEST, addOrUpdateButton, apiClient)
     yield takeEvery(buttons.DELETE, deleteButton, apiClient)
 }
 
-function* addOrUpdateButton(api: SubscribeApiClient, action: Action) {
-  const button: SubscribeButton = get(action, ['payload']);
-
-  if (!button.id) {
-    // Neuen Button erstellen
-    const { result: createResult, error: createError } = yield call(
-      [api, api.post],
-      'buttons',
-      {}
-    );
-
-    if (createError || !createResult?.id) {
-      console.error('Fehler beim Erstellen des Buttons:', createError);
-      return;
-    }
-
-    const newButtonWithId = {
-      ...button,
-      id: createResult.id,
-    };
-
-    yield call(
-      [api, api.put],
-      `buttons/${createResult.id}`,
-      newButtonWithId
-    );
-
-    yield put(buttons.add_or_update_success(newButtonWithId));
-  } else {
-    // Existierenden Button updaten
-    yield call(
-      [api, api.put],
-      `buttons/${button.id}`,
-      button
-    );
-
-    yield put(buttons.add_or_update_success(button));
-  }
-}
 
 function* add(api: SubscribeApiClient) {
   const { result: createResult, error: createError } = yield call(
@@ -72,6 +32,13 @@ function* add(api: SubscribeApiClient) {
     return;
   }
 
+  const { result } = yield api.get('buttons')
+
+  if (!result) {
+    return
+  }
+
+  yield put(buttons.set(result))
   yield put(buttons.set_last_created_id(createResult.id))
 }
 

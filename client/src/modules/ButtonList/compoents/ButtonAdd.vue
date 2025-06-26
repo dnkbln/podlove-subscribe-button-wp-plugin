@@ -1,7 +1,7 @@
 <template>
     <podlove-button variant="secondary" size="small" @click="openAddButton()">Add new</podlove-button>
     <Modal size="medium" :open="modalOpen" @close="closeAddButton()">
-        <ButtonEdit :button="button"></ButtonEdit>
+        <ButtonEdit v-if="button" :button="button"></ButtonEdit>
     </Modal>
 </template>
 
@@ -24,17 +24,26 @@ const state = mapState({
 });
 
 const modalOpen = ref(false);
+const button = ref<SubscribeButton | null>(null);
 
-const button = computed(() => {
-  return state.buttons.find((b: SubscribeButton) => b.id === state.lastCreatedId.value) || null;
+const lastCreatedId = computed(() => {
+  return state.lastCreatedId
 });
 
 function openAddButton() {
     store.dispatch(addButton())
-    modalOpen.value = true
 }
 
 function closeAddButton() {
     modalOpen.value = false
+    button.value = null
 }
+
+watch(lastCreatedId, (newVal, oldVal) => {
+  const b : SubscribeButton = state.buttons.find((item : SubscribeButton) => Number(item.id) === newVal)
+  if (b) {
+    modalOpen.value = true;
+    button.value = b;
+  }
+})
 </script>
