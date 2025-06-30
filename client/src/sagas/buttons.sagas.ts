@@ -1,9 +1,8 @@
 import { SubscribeApiClient } from "src/lib/api";
-import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects'
+import { call, fork, put, takeEvery } from 'redux-saga/effects'
 import { get } from 'lodash'
 import { createApi } from "./api";
 import { takeFirst } from "./helper";
-import { selectors } from "../store";
 
 import * as buttons from '../store/buttons.store'
 import * as lifecycle from '../store/lifecycle.store';
@@ -42,14 +41,17 @@ function* add(api: SubscribeApiClient) {
   yield put(buttons.set_last_created_id(createResult.id))
 }
 
-function* save(api: SubscribeApiClient) {
-    const buttons: SubscribeButton[] = yield select(selectors.buttons.buttons)
+function* save(api: SubscribeApiClient, action: Action) {
+  const payload: any = get(action, 'payload', null)
+  if (!payload) return
 
-    yield all(
-        buttons.map((button: SubscribeButton) =>
-            call([api, api.put], `buttons/${button.id}`, button)
-        )
-    )
+  const id = get(payload, 'id', null)
+  const rawProp = get(payload, 'prop', null)
+  const value = get (payload, 'value', null)
+
+  if (!id || !rawProp || !value) return
+
+  yield call([api, api.put], `buttons/${id}`, {[rawProp]: value})
 }
 
 function* deleteButton(api: SubscribeApiClient, action: Action) {
