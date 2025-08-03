@@ -1,0 +1,42 @@
+--- # Podcast Client Configuration
+- title: 'AntennaPod'
+  platform: 'android'
+  type: 'app'
+  call_schema: '(feed) => `itpc://${removeProtocol(feed)}`'
+  logo: 'AntennaPod.svg'
+
+- title: 'Apple Podcasts'
+  platform: 'ios'
+  type: 'app'
+  call_schema: '(feed) => `podcast://${removeProtocol(feed)}`'
+  logo: 'Apple_Podcasts.svg'
+
+- title: 'Apple Podcasts'
+  platform: 'osx'
+  type: 'app'
+  call_schema: '(feed) => `podcast://${removeProtocol(feed)}`'
+  logo: 'Apple_Podcasts.svg'
+
+- title: 'Apple Podcasts'
+  platform: 'web'
+  type: 'service'
+  call_schema: "(id = '') => `https://podcasts.apple.com/podcast/${id.startsWith('id') ? id : 'id' + id}`"
+  logo: 'Apple_Podcasts.svg'
+
+- title: 'gPodder'
+  platform: 'unix'
+  type: 'app'
+  call_schema: '(feed) => `gpodder://${feed}`'
+  logo: 'gPodder.svg'
+
+- title: 'gPodder'
+  platform: 'windows'
+  type: 'app'
+  call_schema: '(feed) => `gpodder://${feed}`'
+  logo: 'gPodder.svg'
+
+- title: 'gPodder'
+  platform: 'web'
+  type: 'service'
+  call_schema: '(feed) => `http://gpodder.net/subscribe?url=${encodeURIComponent(removeHttps(feed))}`'
+  logo: 'gPodder.svg'

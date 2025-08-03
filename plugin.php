@@ -57,6 +57,8 @@ add_action('rest_api_init', function () {
     $networkbutton->register_routes();
     $settings = new \PodloveSubscribeButton\API\Settings_Controller();
     $settings->register_routes();
+    $client = new \PodloveSubscribeButton\API\Client_Controller();
+    $client->register_routes();
 });
 
 add_action( 'init', function() {

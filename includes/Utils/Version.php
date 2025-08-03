@@ -39,7 +39,7 @@
 
 namespace PodloveSubscribeButton;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 3 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 4 );
 
 add_action( 'admin_init', '\PodloveSubscribeButton\maybe_run_database_migrations' );
 add_action( 'admin_init', '\PodloveSubscribeButton\run_database_migrations', 5 );
@@ -154,6 +154,9 @@ function run_migrations_for_version( $version ) {
                 $button->format = $default_format;
                 $button->save();
             }
+            break;
+        case 4:
+            \PodloveSubscribeButton\Model\Client::build();
             break;
     }
 

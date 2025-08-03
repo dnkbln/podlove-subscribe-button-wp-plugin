@@ -51,6 +51,7 @@ class PodloveSubscribeButton {
     public static function build_models() {
         // Build Databases
         \PodloveSubscribeButton\Model\Button::build();
+        \PodloveSubscribeButton\Model\Client::build();
         if ( is_multisite() )
             \PodloveSubscribeButton\Model\NetworkButton::build();
 
@@ -157,6 +158,7 @@ class PodloveSubscribeButton {
         <div style="padding-top: 1rem; padding-right: 1rem" >
             <div data-client="podlove-subscribe-button">
                 <subscribe-button-overview></subscribe-button-overview>
+                <subscribe-client-list></subscribe-client-list>
                 <subscribe-button-list></subscribe-button-list>
             </div>
         </div>

@@ -1,16 +1,14 @@
 <template>
   <Module title="Podlove Subscribe Button">
-    <template v-slot:actions>
-      <settings></settings>
-    </template>
-
     <div class="border-b border-gray-200 pb-5 m-5">
-      <p class="mt-2 max-w-4xl text-sm text-gray-500">
-        This plugin allows easy inclusion of the Podlove Subscribe Button. Put it in your sidebar with a simple widget or
-        include the button in pages and/or posts with a simple shortcode. Start by adding a button for each of your podcasts
-        here. You can then add the button to your sidebar by adding the Podlove Subscribe Button widget.
-        If you want to display the button inside a page or article, you can also use the [podlove-subscribe-button]
-        shortcode anywhere.
+      <p class="mt-2 text-sm text-gray-500">
+        This plugin allows easy inclusion of the Podlove Subscribe Button.
+      </p>
+      <p class="mt-2 text-sm text-gray-500">
+        The buttons are fully configured here. It is possible to insert the buttons
+        into articles and posts using a Gutenberg block. However, it is also possible
+        to insert the buttons with the help of the shortcode <code class="text-sm">
+        [podlove-subscribe-button]</code>.
       </p>
     </div>
   </Module>
