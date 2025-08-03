@@ -12,6 +12,8 @@
  * Domain Path: /languages
  */
 
+use PodloveSubscribeButton\Utils\Constants;
+
  if (!function_exists('podlove_log_with_stack_trace')) {
     function podlove_log_with_stack_trace($message) {
         // Basis-Lognachricht
@@ -51,7 +53,8 @@ function load_podlove_subscribe_button()
     require_once __DIR__ . '/vendor/autoload.php'; // composer
 
     // Constants
-    require_once __DIR__ . '/includes/Utils/constants.php';
+    Constants::init(__FILE__);
+
     // Version control
     require_once __DIR__ . '/includes/Utils/Version.php';
     // Helper functions
