@@ -88,7 +88,31 @@ class Button_Controller extends WP_REST_Controller
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'size' => [
+                        'description' => __('Size of the button', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ["small", "medium", "big"]
+                    ],
+                    'Autowidth' => [
+                        'description' => __('Autowidth', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ["on", "off"]
+                    ],
+                    'color' => [
+                        'description' => __('Button color', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string'
+                    ],
+                    'style' => [
+                        'description' => __('Button style', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ["filled", "outline", "frameless"]
+                    ],
+                    'format' => [
+                        'description' => __('Button format', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ["rectangle", "square", "cover"]
+                    ],
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
@@ -120,7 +144,12 @@ class Button_Controller extends WP_REST_Controller
                 'subtitle' => $button->subtitle,
                 'description' => $button->description,
                 'cover' => $button->cover,
-                'feeds' => $button->feeds
+                'feeds' => $button->feeds,
+                'size' => $button->size,
+                'autowidth' => $button->autowidth,
+                'color' => $button->color,
+                'style' => $button->style,
+                'format' => $button->format
             ]);
         }
 
@@ -164,7 +193,12 @@ class Button_Controller extends WP_REST_Controller
             'subtitle' => $button->subtitle,
             'description' => $button->description,
             'cover' => $button->cover,
-            'feeds' => $button->feeds
+            'feeds' => $button->feeds,
+            'size' => $button->size,
+            'autowidth' => $button->autowidth,
+            'color' => $button->color,
+            'style' => $button->style,
+            'format' => $button->format
         ]);
     }
 
@@ -230,6 +264,32 @@ class Button_Controller extends WP_REST_Controller
             }
         }
         $button->update_attributes( ["feeds" => $feeds] );
+
+        if (isset($request['size'])) {
+            $size = $request['size'];
+            $button->size = $size;
+        }
+
+        if (isset($request['autowidth'])) {
+            $autowidth = $request['autowidth'];
+            $button->autowidth = $autowidth;
+        }
+
+        if (isset($request['color'])) {
+            $color = $request['color'];
+            $button->color = $color;
+        }
+
+        if (isset($request['style'])) {
+            $style = $request['style'];
+            $button->style = $style;
+        }
+
+        if (isset($request['format'])) {
+            $format = $request['format'];
+            $button->format = $format;
+        }
+
 
         $button->save();
 
