@@ -14,10 +14,7 @@
           border border-gray-300
           rounded-md
           resize-y
-        "
-        :value="button.subtitle"
-        @input="changeSubtitle($event)"
-        ></textarea>
+        " :value="button.subtitle" @input="changeSubtitle($event)"></textarea>
         </div>
         <p class="mt-2 text-sm text-gray-500 flex justify-between">
             <span>Extension to the title. Clarify what the podcast is about.</span>
@@ -38,7 +35,7 @@ const store = injectStore();
 
 const changeSubtitle = (event: Event) => {
     store.dispatch(
-        updateButtonItem({id: props.button.id, prop: 'subtitle', value: (event.target as HTMLInputElement).value})
+        updateButtonItem({id: props.button.id, prop: 'subtitle', value: (event.target as HTMLTextAreaElement).value})
     )
 }
 </script>

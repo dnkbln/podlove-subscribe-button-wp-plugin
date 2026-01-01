@@ -13,16 +13,22 @@
             </div>
           </div>
 
-          <div class="w-24 text-center">
+          <div class="w-28 flex justify-center items-center">
             Preview
           </div>
 
-          <div class="w-16 text-right">
+          <div class="w-28 flex justify-end items-center">
             Aktionen
           </div>
         </div>
         <ul role="list" class="divide-y divide-gray-100">
-          <ButtonListItem v-for="button in state.buttons" :button="button"></ButtonListItem>
+          <ButtonListItem
+            v-for="button in state.buttons"
+            :key="button.id"
+            :button="button"
+            :open="openId === String(button.id)"
+            @closed="handleClosed"
+          ></ButtonListItem>
         </ul>
       </div>
     </div>
@@ -31,6 +37,7 @@
 
 <script setup lang="ts">
 import { mapState } from 'redux-vuex';
+import { ref, watch } from 'vue';
 import { selectors } from '../../store';
 
 import ButtonListItem from './compoents/ButtonListItem.vue';
@@ -38,7 +45,22 @@ import ButtonAdd from './compoents/ButtonAdd.vue';
 import Module from '../../components/module/Module.vue'
 
 const state = mapState({
-  buttons: selectors.buttons.buttons
+  buttons: selectors.buttons.buttons,
+  lastCreatedId: selectors.buttons.lastCreatedId
 });
+
+const openId = ref<string | null>(null)
+
+watch(() => state.lastCreatedId, (newVal) => {
+  if (newVal) {
+    openId.value = newVal ? String(newVal) : null
+  }
+})
+
+function handleClosed(id: string) {
+  if (openId.value === id) {
+    openId.value = null
+  }
+}
 
 </script>

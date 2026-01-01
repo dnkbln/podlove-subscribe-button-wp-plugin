@@ -5,75 +5,69 @@
       <p class="mt-1 text-xs text-gray-500">[podlove-subscribe-button button="{{ button.name }}"]</p>
     </div>
 
-    <div class="w-24 text-center">
+    <div class="w-28 h-8 flex justify-center items-center">
       <ButtonPreview :button="props.button" :key="props.button.id"></ButtonPreview>
     </div>
 
-    <div class="w-16 text-right">
-      <Menu as="div" class="relative inline-block text-left">
-        <MenuButton class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-          <span class="sr-only">Open options</span>
-          <EllipsisVerticalIcon class="size-5" aria-hidden="true" />
-        </MenuButton>
-        <Transition enter="transition ease-out duration-100" enter-from="transform opacity-0 scale-95"
-          enter-to="transform opacity-100 scale-100" leave="transition ease-in duration-75"
-          leave-from="transform opacity-100 scale-100" leave-to="transform opacity-0 scale-95">
-          <MenuItems
-            class="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-hidden z-50">
-            <div class="px-1 py-1">
-              <MenuItem v-slot="{ active }">
-              <button @click="openEdit" :class="[
-                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
-              ]">
-                Edit
-              </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-              <button @click="deleteButtonItem" :class="[
-                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
-                active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
-              ]">
-                Delete
-              </button>
-              </MenuItem>
-            </div>
-          </MenuItems>
-        </Transition>
-      </Menu>
+    <div class="w-28 h-8 flex justify-end items-center gap-2">
+      <button type="button" class="text-gray-500 hover:text-gray-900 p-2" @click="toggleEdit" aria-label="Edit">
+        <PencilSquareIcon class="h-5 w-5" />
+      </button>
+      <button type="button" class="text-gray-500 hover:text-red-600 p-2" @click="deleteButtonItem" aria-label="Delete">
+        <TrashIcon class="h-5 w-5" />
+      </button>
     </div>
+
   </li>
-  <Modal :open="modalOpen" @close="closeEdit">
-      <ButtonEdit :button="props.button"></ButtonEdit>
-  </Modal>
+  <Disclosure :open="isOpen" @close="closeEdit">
+    <template #default>
+      <li class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+        <ButtonForm :button="props.button" @close="closeEdit"></ButtonForm>
+      </li>
+    </template>
+  </Disclosure>
 </template>
 
 <script setup lang="ts">
 
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { EllipsisVerticalIcon, MegaphoneIcon } from '@heroicons/vue/20/solid'
-import { ref } from 'vue'
+import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { ref, watch } from 'vue'
 import { injectStore } from 'redux-vuex';
 
 import { SubscribeButton } from '../../../types/buttons.types'
-import Modal from '../../../components/modal/Modal.vue';
-import ButtonEdit from './ButtonEdit.vue'
+import ButtonForm from './ButtonForm.vue'
 import ButtonPreview from './ButtonPreview.vue'
 import { deleteButton } from '../../../store/buttons.store';
+import Disclosure from '../../../components/disclosure/Disclosure.vue';
 
-const modalOpen = ref(false);
+const isOpen = ref(false);
 const store = injectStore();
+
+const emit = defineEmits<{
+  (e: 'closed', id: string): void
+}>()
 
 const props = defineProps<{
   button: SubscribeButton;
+  open?: boolean;
 }>();
 
-function openEdit() {
-    modalOpen.value = true
+watch(() => props.open, (val) => {
+  if (typeof val === 'boolean') {
+    isOpen.value = val
+  }
+}, { immediate: true })
+
+function toggleEdit() {
+    isOpen.value = !isOpen.value
+    if (!isOpen.value) {
+      emit('closed', props.button.id)
+    }
 }
 
 function closeEdit() {
-    modalOpen.value = false
+    isOpen.value = false
+    emit('closed', props.button.id)
 }
 
 function deleteButtonItem() {

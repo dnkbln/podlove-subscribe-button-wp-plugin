@@ -63,10 +63,6 @@ class Button_Controller extends WP_REST_Controller
                         'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::url'
                     ],
                     'feeds' => [
-                        'description' => __('Title for the podcast::soundbite tag', 'podlove-subscribe-button-plugin-for-wordpress'),
-                        'type' => 'string'
-                    ],
-                    'feeds' => [
                         'description' => __('List of chapters, please use MP4Chaps format.', 'podlove-subscribe-button-plugin-for-wordpress'),
                         'type' => 'array',
                         'items' => [
@@ -84,7 +80,7 @@ class Button_Controller extends WP_REST_Controller
                                 ],
                                 'format' => [
                                     'description' => __('Media format', 'podlove-subscribe-button-plugin-for-wordpress'),
-                                    'type' => 'integer'
+                                    'type' => 'string'
                                 ]
                             ]
                         ]

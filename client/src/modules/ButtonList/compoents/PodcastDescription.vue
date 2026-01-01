@@ -38,7 +38,7 @@ const store = injectStore();
 
 const changeSubscription = (event: Event) => {
     store.dispatch(
-        updateButtonItem({id: props.button.id, prop: 'subscription', value: (event.target as HTMLInputElement).value})
+        updateButtonItem({id: props.button.id, prop: 'description', value: (event.target as HTMLTextAreaElement).value})
     )
 }
 </script>
