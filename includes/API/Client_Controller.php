@@ -50,7 +50,7 @@ class Client_Controller extends \WP_REST_Controller
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'args'     => [
-                    'name' => [
+                    'title' => [
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-subscribe-button-plugin-for-wordpress'),
                         'type' => 'string'
                     ],
@@ -99,9 +99,10 @@ class Client_Controller extends \WP_REST_Controller
         foreach( $clients as $client) {
             array_push( $results, [
                 'id' => $client->id,
-                'name' => $client->name,
+                'title' => $client->title,
                 'platform' => $client->get_platform_list(),
-                'type' => $client->get_type_list()
+                'type' => $client->get_type_list(),
+                'call_schema' => $client->call_schema
             ]);
         }
 
@@ -114,7 +115,7 @@ class Client_Controller extends \WP_REST_Controller
 
     public function create_item($request) {
         $client = new Client();
-        $client->name = "API added client";
+        $client->title = "API added client";
         $client->save();
 
         return new CreateResponse([
@@ -137,9 +138,10 @@ class Client_Controller extends \WP_REST_Controller
 
         return new OkResponse([
             'id' => $client->id,
-            'name' => $client->name,
+            'title' => $client->title,
             'platform' => $client->get_platform_list(),
-            'type' => $client->get_type_list()
+            'type' => $client->get_type_list(),
+            'call_schema' => $client->call_schema
         ]);
     }
 
@@ -155,11 +157,6 @@ class Client_Controller extends \WP_REST_Controller
             return new NotFound();
         }
 
-        if (isset($request['name'])) {
-            $name = $request['name'];
-            $client->name = $name;
-        }
-
         if (isset($request['title'])) {
             $title = $request['title'];
             $client->title = $title;
@@ -167,62 +164,12 @@ class Client_Controller extends \WP_REST_Controller
 
         if (isset($request['platform'])) {
             $platforms = $request['platform'];
-            if (is_array($platforms)) {
-                $client->platform = Client::PLATFORMS['none'];
-                foreach ( $platforms as $platform ) {
-                    if ( $platform === 'android' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['android'];
-                    } else if ( $platform === 'ios' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['ios'];
-                    } else if ( $platform === 'osx' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['osx'];
-                    } else if ( $platform === 'windows' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['windows'];
-                    } else if ( $platform === 'unix' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['unix'];
-                    } else if ( $platform === 'web' ) {
-                        $client->platform = $client->platform | Client::PLATFORMS['web'];
-                    }
-                }
-            } else {
-                if ( $platforms === 'android') {
-                    $client->platform = Client::PLATFORMS['android'];
-                } else if ( $$platforms === 'ios' ) {
-                    $client->platform = Client::PLATFORMS['ios'];
-                } else if ( $$platforms === 'osx' ) {
-                    $client->platform = Client::PLATFORMS['osx'];
-                } else if ( $$platforms === 'windows' ) {
-                    $client->platform = Client::PLATFORMS['windows'];
-                } else if ( $$platforms === 'unix' ) {
-                    $client->platform = Client::PLATFORMS['unix'];
-                } else if ( $$platforms === 'web' ) {
-                    $client->platform = Client::PLATFORMS['web'];
-                } else {
-                    $client->platform = Client::PLATFORMS['none'];
-                }
-            }
+            $client->platform = Client::get_platform($platforms);
         }
 
         if (isset($request['type'])) {
             $types = $request['type'];
-            if (is_array($types)) {
-                $client->type = Client::TYPES['none'];
-                foreach ( $types as $type ) {
-                    if ( $type === 'app' ) {
-                        $client->type = $client->type | Client::TYPES['app'];
-                    } else if ( $type === 'service' ) {
-                        $client->type = $client->type | Client::TYPES['service'];
-                    }
-                }
-            } else {
-                if ( $types === 'app') {
-                    $client->type = Client::TYPES['app'];
-                } else if ( $types === 'service' ) {
-                    $client->type = Client::TYPES['service'];
-                } else {
-                    $client->type = Client::TYPES['none'];
-                }
-            }
+            $client->type = Client::get_type($types);
         }
 
         $client->save();

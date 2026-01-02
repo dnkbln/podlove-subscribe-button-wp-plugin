@@ -24,6 +24,72 @@ class Client extends Base {
         'service' => 2
     ];
 
+    public static function get_platform($platforms)
+    {
+        $platform_val = 0;
+        if (is_array($platforms)) {
+            $platform_val = Client::PLATFORMS['none'];
+            foreach ( $platforms as $platform ) {
+                if ( $platform === 'android' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['android'];
+                } else if ( $platform === 'ios' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['ios'];
+                } else if ( $platform === 'osx' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['osx'];
+                } else if ( $platform === 'windows' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['windows'];
+                } else if ( $platform === 'unix' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['unix'];
+                } else if ( $platform === 'web' ) {
+                    $platform_val = $platform_val | Client::PLATFORMS['web'];
+                }
+            }
+        } else {
+            if ( $platforms === 'android') {
+                $platform_val = Client::PLATFORMS['android'];
+            } else if ( $platforms === 'ios' ) {
+                $platform_val = Client::PLATFORMS['ios'];
+            } else if ( $platforms === 'osx' ) {
+                $platform_val = Client::PLATFORMS['osx'];
+            } else if ( $platforms === 'windows' ) {
+                $platform_val = Client::PLATFORMS['windows'];
+            } else if ( $platforms === 'unix' ) {
+                $platform_val = Client::PLATFORMS['unix'];
+            } else if ( $platforms === 'web' ) {
+                $platform_val = Client::PLATFORMS['web'];
+            } else {
+                $platform_val = Client::PLATFORMS['none'];
+            }
+        }
+
+        return $platform_val;
+    }
+
+    public static function get_type($types)
+    {
+        $type_val = 0;
+        if (is_array($types)) {
+            $type_val = Client::TYPES['none'];
+            foreach ( $types as $type ) {
+                if ( $type === 'app' ) {
+                    $type_val = $type_val | Client::TYPES['app'];
+                } else if ( $type === 'service' ) {
+                    $type_val = $type_val | Client::TYPES['service'];
+                }
+            }
+        } else {
+            if ( $types === 'app') {
+                $type_val = Client::TYPES['app'];
+            } else if ( $types === 'service' ) {
+                $type_val = Client::TYPES['service'];
+            } else {
+                $type_val = Client::TYPES['none'];
+            }
+        }
+
+        return $type_val;
+    }
+
     public function get_platform_list()
     {
         if ($this->platform === 0)
@@ -61,11 +127,31 @@ class Client extends Base {
             [Constants::$plugin_dir, 'includes', 'Model', 'data', 'clients.yml']
         );
 
-        return Yaml::parse(file_get_contents($file));
+        $clients = Yaml::parse(file_get_contents($file));
+        $merged = [];
+
+        foreach ($clients as $client) {
+            $title = $client['title'];
+            $platform = Client::get_platform($client['platform']);
+            $type = Client::get_type($client['type']);
+
+            if (!isset($merged[$title])) {
+                $merged[$title] = $client;
+                $merged[$title]['platform'] = $platform;
+                $merged[$title]['type'] = $type;
+            } else {
+                $merged[$title]['platform'] |= $platform;
+                $merged[$title]['type'] |= $type;
+            }
+        }
+
+        // Return as indexed array
+        return array_values($merged);
     }
 }
 
 Client::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Client::property( 'name', 'VARCHAR(255)' );
+Client::property( 'title', 'VARCHAR(255)' );
 Client::property( 'platform', 'INTEGER' );
 Client::property( 'type', 'INTEGER' );
+Client::property( 'call_schema', 'TEXT' );

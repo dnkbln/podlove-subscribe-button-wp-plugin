@@ -4,12 +4,14 @@ import * as lifecycleStore from './lifecycle.store'
 import * as runtimeStore from './runtime.store'
 import * as buttonsStore from './buttons.store'
 import * as settingsStore from './settings.store'
+import * as clientStore from './clients.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
   runtime: (state: State) => state.runtime,
   buttons: (state: State) => state.buttons,
-  settings: (state: State) => state.settings
+  settings: (state: State) => state.settings,
+  client: (state: State) => state.client
 }
 
 const buttons = {
@@ -33,9 +35,15 @@ const settings = {
   settings: createSelector(root.settings, settingsStore.selectors.settings)
 }
 
+const client = {
+  clientList: createSelector(root.client, clientStore.seclectors.clientList),
+  selectedClients: createSelector(root.client, clientStore.seclectors.selectedClients)
+}
+
 export default {
   lifecycle,
   runtime,
   buttons,
-  settings
+  settings,
+  client
 }
