@@ -1,5 +1,11 @@
 <template>
   <Module title="Clients">
+    <template v-slot:actions>
+      <ClientAdd
+        :clients="state.clientList"
+        :selected-clients="state.selectedClients"
+        @select="handleClientSelect" />
+    </template>
     <div class="border-b border-gray-200 pb-5 m-5">
       <p class="mt-2 text-sm text-gray-500">
         Here you can select the apps and services you want to offer in the SubscribeButton.
@@ -10,54 +16,57 @@
       </p>
     </div>
     <ul role="list" class="m-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-      <li v-for="client in state.selectedClients" :key="client.id"
-        class="col-span-1 flex rounded-md shadow-xs dark:shadow-none">
+      <li v-for="client in state.selectedClients" :key="client.id" class="col-span-1">
         <ClientItem :client="client" />
       </li>
     </ul>
-    <div class="py-3 px-6 border-t border-gray-200">
-      <ul v-if="addClientInput">
-        <li class="mb-0">
-          <AddClient @addClient="addClient($event)" @close="closeAddClient()" />
-        </li>
-      </ul>
-      <div v-if="!addClientInput" class="py-3">
-        <podlove-button variant="secondary" @click="showAddClient()">
-          <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Add Client
-        </podlove-button>
-      </div>
-    </div>
   </Module>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { mapState } from 'redux-vuex';
-import { PlusIcon as PlusSmIcon } from '@heroicons/vue/24/outline'
+import { injectStore, mapState } from 'redux-vuex';
 
 import { selectors } from '../../store';
 import Module from '../../components/module/Module.vue';
 import ClientItem from './components/ClientItem.vue';
-import PodloveButton from '../../components/button/Button.vue'
-import AddClient from './components/AddClient.vue';
-
-const addClientInput = ref(false)
+import ClientAdd, { ClientAddSelection } from './components/ClientAdd.vue';
+import { set_selected_clients } from '../../store/clients.store';
+import { Client } from '../../types/client.types';
 
 const state = mapState({
   clientList: selectors.client.clientList,
   selectedClients: selectors.client.selectedClients
 });
 
-function closeAddClient() {
-  addClientInput.value = false
+const store = injectStore();
+
+function clientKey(client: Client): string {
+  return client.id ?? client.title ?? '';
 }
 
-function showAddClient() {
-  addClientInput.value = true
-}
+function handleClientSelect(selection: ClientAddSelection) {
+  const selected = (state.selectedClients ?? []) as Client[];
+  const selectedByKey = new Map<string, Client>();
 
-function addClient(event: Event) {
-  console.log("Add client", event)
+  for (const client of selected) {
+    selectedByKey.set(clientKey(client), client);
+  }
+
+  if (selection.type === 'all') {
+    for (const client of state.clientList ?? []) {
+      const key = clientKey(client);
+      if (!selectedByKey.has(key)) {
+        selectedByKey.set(key, client);
+      }
+    }
+  } else {
+    const key = clientKey(selection.client);
+    if (!selectedByKey.has(key)) {
+      selectedByKey.set(key, selection.client);
+    }
+  }
+
+  store.dispatch(set_selected_clients(Array.from(selectedByKey.values())));
 }
 
 </script>
