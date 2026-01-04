@@ -109,7 +109,8 @@ const selectedKeys = computed(() => {
   for (const client of props.selectedClients ?? []) {
     if (client.id) {
       keys.add(client.id);
-    } else if (client.title) {
+    }
+    if (client.title) {
       keys.add(client.title);
     }
   }
@@ -117,7 +118,15 @@ const selectedKeys = computed(() => {
 });
 
 const availableClients = computed(() => {
-  return (props.clients ?? []).filter((client) => !selectedKeys.value.has(clientKey(client)));
+  return (props.clients ?? []).filter((client) => {
+    if (client.id && selectedKeys.value.has(client.id)) {
+      return false;
+    }
+    if (client.title && selectedKeys.value.has(client.title)) {
+      return false;
+    }
+    return true;
+  });
 });
 
 const filteredClients = computed(() => {

@@ -17,37 +17,69 @@
           type="button"
           class="inline-flex size-12 items-center justify-center rounded-md text-gray-500 hover:text-red-600"
           aria-label="Remove client"
-          @click="removeClient(props.client.id)">
+          @click="removeClient()">
           <trash-icon class="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
     </header>
 
     <div class="mt-auto border-t border-gray-100 px-4 py-3 dark:border-white/10">
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="platform in visiblePlatforms"
-          :key="platform"
-          type="button"
-          class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
-          :aria-label="`Remove ${platformLabel(platform)}`"
-          @click="removePlatform(platform)">
-          <span>{{ platformLabel(platform) }}</span>
-          <x-icon class="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-        <p v-if="!visiblePlatforms.length" class="text-xs text-gray-400">No platforms</p>
+      <div class="flex items-start gap-2">
+        <div class="flex flex-wrap">
+          <PodloveTag
+            v-for="platform in visiblePlatforms"
+            :key="platform"
+            :id="platform"
+            :value="platformLabel(platform)"
+            :remove-label="`Remove ${platformLabel(platform)}`"
+            @removeTag="handleRemoveTag" />
+          <p v-if="!visiblePlatforms.length" class="text-xs text-gray-400">No platforms</p>
+        </div>
+        <div class="relative ml-auto">
+          <Popover
+            panel-class="absolute right-0 z-10 mt-2 w-44 rounded-md border border-gray-200 bg-white shadow-lg dark:border-white/10 dark:bg-gray-900">
+            <template #trigger>
+              <button
+                type="button"
+                class="inline-flex size-8 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:text-gray-300 dark:hover:bg-gray-800"
+                :disabled="!missingPlatforms.length"
+                :aria-label="missingPlatforms.length ? 'Add platform' : 'All platforms added'">
+                <plus-icon class="h-4 w-4" aria-hidden="true" />
+              </button>
+            </template>
+            <template #default="{ close }">
+              <ul class="py-1">
+                <li
+                  v-for="platform in missingPlatforms"
+                  :key="platform">
+                  <button
+                    type="button"
+                    class="flex w-full items-center px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                    @click="addPlatform(platform, close)">
+                    {{ platformLabel(platform) }}
+                  </button>
+                </li>
+                <li v-if="!missingPlatforms.length" class="px-3 py-2 text-xs text-gray-500">
+                  All platforms added
+                </li>
+              </ul>
+            </template>
+          </Popover>
+        </div>
       </div>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { Client } from '../../../types/client.types';
-import { TrashIcon, XMarkIcon as XIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { injectStore } from 'redux-vuex';
 
-import { remove_selected_client } from '../../../store/clients.store';
+import { remove_selected_client, update_selected_client } from '../../../store/clients.store';
+import Popover from '../../../components/popover/Popover.vue';
+import PodloveTag from '../../../components/tag/Tag.vue';
 
 import antennaPodIcon  from '../../../assets/antennapod/icon.svg';
 import applePodcastsIcon  from '../../../assets/apple-podcasts/icon.svg';
@@ -56,15 +88,13 @@ import gpodderIcon from '../../../assets/gpodder/icon.svg';
 const store = injectStore();
 
 const props = defineProps<{
-  client: Client
+  client: Client;
+  supportedPlatforms: Client['platform'];
 }>();
 
-function removeClient(id: string) {
-  console.log("Remove client with ID:", id);
+function removeClient() {
   store.dispatch(remove_selected_client(props.client))
 }
-
-const hiddenPlatforms = ref<string[]>([]);
 
 const platformLabels: Record<string, string> = {
   android: 'Android',
@@ -95,15 +125,31 @@ function normalizePlatforms(platform: Client['platform'] | string[] | null): str
   return [platform];
 }
 
-const visiblePlatforms = computed(() => {
-  const platforms = normalizePlatforms(props.client.platform);
-  return platforms.filter((platform) => !hiddenPlatforms.value.includes(platform));
-});
+const visiblePlatforms = computed(() => normalizePlatforms(props.client.platform));
+const supportedPlatformList = computed(() => normalizePlatforms(props.supportedPlatforms ?? props.client.platform));
+const missingPlatforms = computed(() =>
+  supportedPlatformList.value.filter((platform) => !visiblePlatforms.value.includes(platform))
+);
 
 function removePlatform(platform: string) {
-  if (!hiddenPlatforms.value.includes(platform)) {
-    hiddenPlatforms.value = [...hiddenPlatforms.value, platform];
-  }
+  const updatedPlatforms = visiblePlatforms.value.filter((entry) => entry !== platform);
+  store.dispatch(update_selected_client({
+    ...props.client,
+    platform: updatedPlatforms
+  }));
+}
+
+function handleRemoveTag(id: string | number) {
+  removePlatform(String(id));
+}
+
+function addPlatform(platform: string, close: () => void) {
+  const updatedPlatforms = Array.from(new Set([...visiblePlatforms.value, platform]));
+  store.dispatch(update_selected_client({
+    ...props.client,
+    platform: updatedPlatforms
+  }));
+  close();
 }
 
 function getClientIconPath(title: string | null): string {

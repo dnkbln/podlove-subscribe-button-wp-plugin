@@ -205,6 +205,20 @@ class Client_Controller extends \WP_REST_Controller
     }
 
     public function get_clients() {
-        return Client::config_clients();
+        $clients = Client::config_clients();
+        $results = [];
+
+        foreach ($clients as $client) {
+            $client_model = new Client();
+            $client_model->platform = $client['platform'] ?? 0;
+            $client_model->type = $client['type'] ?? 0;
+
+            $client['platform'] = $client_model->get_platform_list();
+            $client['type'] = $client_model->get_type_list();
+
+            $results[] = $client;
+        }
+
+        return $results;
     }
 }

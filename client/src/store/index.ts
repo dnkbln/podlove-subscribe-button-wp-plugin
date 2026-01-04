@@ -20,7 +20,7 @@ declare global {
   import lifecycleSaga from '../sagas/lifecycle.sagas'
   import notificationSaga from '../sagas/notification.sagas'
   import settingsSaga from '../sagas/settings.sagas'
-  import clientSaga from '../sagas/client.sagas'
+  import clientSaga from '../sagas/clients.sagas'
 
   export interface State {
     lifecycle: lifecycleState
