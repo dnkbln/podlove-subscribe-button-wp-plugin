@@ -1,5 +1,5 @@
 import { createAction, handleActions, Action } from "redux-actions";
-import { Client } from "../types/client.types";
+import { Client } from "@/types/client.types";
 
 export type State = {
     clientList: Client[],
@@ -46,39 +46,10 @@ export const reducer = handleActions<State, any>({
             ...state,
             selectedClients: selectedClients
         };
-    },
-    [UPDATE_SELECTED_CLIENT]: (state: State, { payload }: Action<ClientUpdate>) => {
-        if (!payload) {
-            return {
-                ...state
-            };
-        }
-
-        const key = clientKey(payload);
-        if (!key) {
-            return {
-                ...state
-            };
-        }
-
-        const selectedClients = state.selectedClients.map((client) => {
-            if (clientKey(client) !== key) {
-                return client;
-            }
-            return {
-                ...client,
-                ...payload
-            };
-        });
-
-        return {
-            ...state,
-            selectedClients
-        };
-    },
+    }
 }, initialState);
 
-export const seclectors = {
+export const selectors = {
     clientList: (state: State) => state.clientList,
     selectedClients: (state: State) => state.selectedClients
 }

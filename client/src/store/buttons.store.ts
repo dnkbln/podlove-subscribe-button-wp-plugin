@@ -14,7 +14,7 @@ export const initialState: State = {
 
 export const INIT = 'podlove/subscribe/buttons/INIT'
 export const SET = 'podlove/subscribe/buttons/SET'
-export const SET_LAST_CREATED_ID = 'podlove/subscribe/buttobs/SET_LAST_CREATED_ID'
+export const SET_LAST_CREATED_ID = 'podlove/subscribe/buttons/SET_LAST_CREATED_ID'
 export const ADD = 'podlove/subscribe/buttons/ADD'
 export const UPDATE_ITEM = 'podlove/subscribe/buttons/UPDATE_ITEM'
 export const DELETE = 'podlove/subscribe/buttons/DELETE'

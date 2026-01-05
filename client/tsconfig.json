@@ -12,7 +12,10 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "paths": {
+      "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
+      "@store/*": ["src/store/*"],
+      "@sagas/*": ["src/sagas/*"]
     }
   },
   "exclude": ["node_modules/**/*"],

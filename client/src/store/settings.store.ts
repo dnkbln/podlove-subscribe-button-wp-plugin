@@ -1,5 +1,5 @@
 import { createAction, handleActions, Action } from "redux-actions"
-import { SubscribeButtonSettings } from "../types/settings.types"
+import { SubscribeButtonSettings } from "@/types/settings.types"
 import { get } from 'lodash'
 
 export type State = {
@@ -12,7 +12,7 @@ export const initialState: State = {
 
 export const INIT = 'podlove/subscribe/settings/INIT'
 export const SET = 'podlove/subscribe/settings/SET'
-export const UPDATE_ITEM = 'podlove/suscribe/settings/UPDATE_ITEM'
+export const UPDATE_ITEM = 'podlove/subscribe/settings/UPDATE_ITEM'
 
 export const init = createAction<void>(INIT);
 export const set = createAction<SubscribeButtonSettings[]>(SET)
@@ -45,7 +45,7 @@ export const reducer = handleActions<State, any>({
 
           return {
             ...state,
-            button: {
+            settings: {
               ...state.settings,
               [prop]: value
             }

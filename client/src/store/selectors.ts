@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect'
-import { State } from './index'
-import * as lifecycleStore from './lifecycle.store'
-import * as runtimeStore from './runtime.store'
-import * as buttonsStore from './buttons.store'
-import * as settingsStore from './settings.store'
-import * as clientStore from './clients.store'
+import { State } from '@store/index'
+import * as lifecycleStore from '@store/lifecycle.store'
+import * as runtimeStore from '@store/runtime.store'
+import * as buttonsStore from '@store/buttons.store'
+import * as settingsStore from '@store/settings.store'
+import * as clientStore from '@store/clients.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -36,8 +36,8 @@ const settings = {
 }
 
 const client = {
-  clientList: createSelector(root.client, clientStore.seclectors.clientList),
-  selectedClients: createSelector(root.client, clientStore.seclectors.selectedClients)
+  clientList: createSelector(root.client, clientStore.selectors.clientList),
+  selectedClients: createSelector(root.client, clientStore.selectors.selectedClients)
 }
 
 export default {

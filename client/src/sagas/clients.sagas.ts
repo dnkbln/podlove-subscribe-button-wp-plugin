@@ -1,13 +1,13 @@
-import { SubscribeApiClient } from 'src/lib/api';
+import { SubscribeApiClient } from '@/lib/api';
 import { createApi } from './api';
 import { call, fork, put, takeEvery } from 'redux-saga/effects'
 import { Action } from 'redux-saga';
 import { get } from 'lodash'
 
-import * as lifecycle from '../store/lifecycle.store';
-import * as client from '../store/clients.store'
+import * as lifecycle from '@store/lifecycle.store';
+import * as client from '@store/clients.store'
 import { takeFirst } from './helper';
-import { Client } from '../types/client.types';
+import { Client } from '@/types/client.types';
 
 function* clientSaga(): any {
     const apiClient: SubscribeApiClient = yield createApi()
