@@ -87,26 +87,15 @@ function* updateSelectedClient(api: SubscribeApiClient, action: Action) {
     }
 
     const id = get(payload, 'id', null);
-    if (!id) {
+    const prop = get(payload, 'prop', null);
+    const value = get(payload, 'value', null);
+    if (!id || !prop) {
         return;
     }
 
-    const body: Record<string, any> = {};
-    if (Object.prototype.hasOwnProperty.call(payload, 'platform')) {
-        body.platform = payload.platform;
-    }
-    if (Object.prototype.hasOwnProperty.call(payload, 'title')) {
-        body.title = payload.title;
-    }
-    if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
-        body.type = payload.type;
-    }
-
-    if (!Object.keys(body).length) {
-        return;
-    }
-
-    yield call([api, api.put], `clients/${id}`, body);
+    yield call([api, api.put], `clients/${id}`, {
+        [prop]: value
+    });
 }
 
 export default function () {

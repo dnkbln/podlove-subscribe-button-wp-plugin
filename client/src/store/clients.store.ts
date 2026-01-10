@@ -1,12 +1,17 @@
 import { createAction, handleActions, Action } from "redux-actions";
 import { Client } from "@/types/client.types";
+import { get } from 'lodash'
 
 export type State = {
     clientList: Client[],
     selectedClients: Client[]
 }
 
-export type ClientUpdate = Partial<Client> & { id?: string; title?: string | null };
+export type ClientUpdate = {
+    id?: string;
+    prop?: keyof Client;
+    value?: Client[keyof Client];
+};
 
 export const initialState: State = {
     clientList: [],
@@ -27,10 +32,6 @@ export const remove_selected_client = createAction<Client>(REMOVE_SELECTED_CLIEN
 export const add_selected_clients = createAction<Client[]>(ADD_SELECTED_CLIENTS);
 export const update_selected_client = createAction<ClientUpdate>(UPDATE_SELECTED_CLIENT);
 
-function clientKey(client: Client | ClientUpdate): string {
-    return client.id ?? client.title ?? '';
-}
-
 export const reducer = handleActions<State, any>({
     [SET_CLIENT_LIST]: (state : State, { payload }: Action<Client[]>) => ({
         ...state,
@@ -40,13 +41,58 @@ export const reducer = handleActions<State, any>({
         ...state,
         selectedClients: payload
     }),
+    [UPDATE_SELECTED_CLIENT]: (state: State, { payload }: Action<ClientUpdate>) => {
+        const id = get(payload, 'id', null);
+        const prop = get(payload, 'prop', null) as ClientUpdate['prop'];
+        const value = get(payload, 'value', null);
+
+        if (!id || !prop) {
+            return {
+                ...state
+            }
+        }
+
+        const validKeys: (keyof Client)[] = [
+            'title',
+            'platform',
+            'type',
+            'logo',
+            'call_schema'
+        ];
+
+        if (!validKeys.includes(prop) || value === undefined) {
+            return {
+                ...state
+            }
+        }
+
+        if (prop === 'platform' || prop === 'type') {
+            const list = Array.isArray(value) ? value : (value ? [value] : []);
+            if (!list.length) {
+                return {
+                    ...state
+                }
+            }
+        }
+
+        const selectedClients = state.selectedClients.map((client) => {
+            return client.id === id
+              ? { ...client, [prop]: value }
+              : client;
+        });
+
+        return {
+            ...state,
+            selectedClients: selectedClients
+        }
+    },
     [REMOVE_SELECTED_CLIENT]: (state: State, { payload}: Action<Client>) => {
         const selectedClients = state.selectedClients.filter((client) => client.id !== payload.id)
         return {
             ...state,
             selectedClients: selectedClients
         };
-    }
+    },
 }, initialState);
 
 export const selectors = {

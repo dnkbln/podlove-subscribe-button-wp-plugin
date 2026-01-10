@@ -5,15 +5,15 @@
       <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Podcast informations</p>
     </div>
     <div class="p-3">
-      <div class="flex justify-items-stretch mb-5">
+      <div class="flex justify-items-stretch mb-2">
         <PodcastCover class="mr-5"/>
         <div class="mb-2 w-full">
           <ButtonID :button="button" class="w-full" />
-          <PodcastTitle :button="button" class="mb-5"></PodcastTitle>
+          <PodcastTitle :button="button" class="mb-2"></PodcastTitle>
         </div>
       </div>
-      <PodcastSubtitle :button="button" class="mb-5"></PodcastSubtitle>
-      <PodcastDescription :button="button" class="mb-5"></PodcastDescription>
+      <PodcastSubtitle :button="button" class="mb-2"></PodcastSubtitle>
+      <PodcastDescription :button="button" class="mb-2"></PodcastDescription>
       <PodcastFeed :button="button"></PodcastFeed>
     </div>
   </div>

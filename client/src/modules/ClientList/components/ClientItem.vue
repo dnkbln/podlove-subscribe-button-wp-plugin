@@ -134,8 +134,9 @@ const missingPlatforms = computed(() =>
 function removePlatform(platform: string) {
   const updatedPlatforms = visiblePlatforms.value.filter((entry) => entry !== platform);
   store.dispatch(update_selected_client({
-    ...props.client,
-    platform: updatedPlatforms
+    id: props.client.id,
+    prop: 'platform',
+    value: updatedPlatforms
   }));
 }
 
@@ -146,8 +147,9 @@ function handleRemoveTag(id: string | number) {
 function addPlatform(platform: string, close: () => void) {
   const updatedPlatforms = Array.from(new Set([...visiblePlatforms.value, platform]));
   store.dispatch(update_selected_client({
-    ...props.client,
-    platform: updatedPlatforms
+    id: props.client.id,
+    prop: 'platform',
+    value: updatedPlatforms
   }));
   close();
 }
