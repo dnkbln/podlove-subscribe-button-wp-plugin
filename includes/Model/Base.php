@@ -158,44 +158,21 @@ abstract class Base {
     }
 
     public static function find_by_id( $id ) {
-        global $wpdb;
-
-        $class = get_called_class();
-        $model = new $class();
-        $model->flag_as_not_new();
-
-        $row = $wpdb->get_row( 'SELECT * FROM ' . static::table_name() . ' WHERE id = ' . (int) $id );
-
-        if ( ! $row ) {
-            return null;
-        }
-
-        foreach ( $row as $property => $value ) {
-            $model->$property = static::unserialize_property($value);
-        }
-
-        return $model;
+        return self::find_one_by_sql(
+                'SELECT * FROM '.static::table_name().' WHERE id = '.(int) $id
+            );
     }
 
     public static function find_one_by_property( $property, $value ) {
-        global $wpdb;
+        return self::find_one_by_sql(
+            'SELECT * FROM '.static::table_name().' WHERE '.$property.' = \''.esc_sql($value).'\' LIMIT 0,1'
+        );
+    }
 
-        $class = get_called_class();
-        $model = new $class();
-        $model->flag_as_not_new();
-
-        $query = $wpdb->prepare('SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'%s\' LIMIT 0,1', $value);
-        $row = $wpdb->get_row($query);
-
-        if ( ! $row ) {
-            return null;
-        }
-
-        foreach ( $row as $property => $value ) {
-            $model->$property = static::unserialize_property($value);
-        }
-
-        return $model;
+    public static function find_all_by_property( $property, $value ) {
+        return self::find_all_by_sql(
+            'SELECT * FROM '.static::table_name().' WHERE '.$property.' = \''.esc_sql($value).'\''
+        );
     }
 
     /**
@@ -458,6 +435,52 @@ abstract class Base {
                 $wpdb->query( $sql );
             }
         }
+    }
+
+    public static function find_one_by_sql($sql)
+    {
+        global $wpdb;
+
+        $class = get_called_class();
+        $model = new $class();
+        $model->flag_as_not_new();
+
+        $row = $wpdb->get_row($sql);
+
+        if (!$row) {
+            return null;
+        }
+
+        foreach ($row as $property => $value) {
+            $model->{$property} = static::unserialize_property($value);
+        }
+
+        return $model;
+    }
+
+    public static function find_all_by_sql($sql)
+    {
+        global $wpdb;
+
+        $class = get_called_class();
+        $models = [];
+
+        $rows = $wpdb->get_results($sql);
+
+        if (!$rows) {
+            return [];
+        }
+
+        foreach ($rows as $row) {
+            $model = new $class();
+            $model->flag_as_not_new();
+            foreach ($row as $property => $value) {
+                $model->{$property} = static::unserialize_property($value);
+            }
+            $models[] = $model;
+        }
+
+        return $models;
     }
 
     /**

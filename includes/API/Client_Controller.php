@@ -25,11 +25,27 @@ class Client_Controller extends \WP_REST_Controller
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
+                'args' => [
+                    'button_id' => [
+                        'description' => __('ID of the button associated with this client.', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'required' => true,
+                        'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::button_id',
+                    ],
+                ],
             ],
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
+                'args' => [
+                    'button_id' => [
+                        'description' => __('ID of the button associated with this client.', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'required' => true,
+                        'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::button_id',
+                    ],
+                ],
             ]
         ]);
 
@@ -54,10 +70,6 @@ class Client_Controller extends \WP_REST_Controller
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-subscribe-button-plugin-for-wordpress'),
                         'type' => 'string'
                     ],
-                    'title' => [
-                        'description' => __('Title for the podcast::soundbite tag', 'podlove-subscribe-button-plugin-for-wordpress'),
-                        'type' => 'string'
-                    ],
                     'platform' => [
                         'description' => __('Client platforms: android, ios, osx, windows, unix and/or web', 'podlove-subscribe-button-plugin-for-wordpress'),
                         'type'        => 'array',
@@ -73,6 +85,15 @@ class Client_Controller extends \WP_REST_Controller
                             'type' => 'string',
                             'enum' => ['app', 'service'],
                         ],
+                    ],
+                    'button_id' => [
+                        'description' => __('ID of the button associated with this client.', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'validate_callback' => '\PodloveSubscribeButton\Utils\API\Validation::button_id',
+                    ],
+                    'podcast_id' => [
+                        'description' => __('Podcast ID associated with this client.', 'podlove-subscribe-button-plugin-for-wordpress'),
+                        'type' => 'string'
                     ],
                 ],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
@@ -93,17 +114,29 @@ class Client_Controller extends \WP_REST_Controller
     }
 
     public function get_items($request) {
+
+        if (!!!isset($request['button_id'])) {
+            return new NotFound();
+        }
+        $button_id = $request['button_id'];
+
         $clients = Client::all();
         $results = [];
 
-        foreach( $clients as $client) {
-            array_push( $results, [
+        $filteredClients = array_filter($clients, function ($client) use ($button_id) {
+            return $client->button_id == $button_id;
+        });
+
+        foreach ($filteredClients as $client) {
+            $results[] = [
                 'id' => $client->id,
                 'title' => $client->title,
                 'platform' => $client->get_platform_list(),
                 'type' => $client->get_type_list(),
-                'call_schema' => $client->call_schema
-            ]);
+                'call_schema' => $client->call_schema,
+                'button_id' => $client->button_id,
+                'podcast_id' => $client->podcast_id
+            ];
         }
 
         return new OkResponse($results);
@@ -114,8 +147,15 @@ class Client_Controller extends \WP_REST_Controller
     }
 
     public function create_item($request) {
+
         $client = new Client();
         $client->title = "API added client";
+
+        if (isset($request['button_id'])) {
+            $button_id = $request['button_id'];
+            $client->button_id = $button_id;
+        }
+
         $client->save();
 
         return new CreateResponse([
@@ -141,7 +181,9 @@ class Client_Controller extends \WP_REST_Controller
             'title' => $client->title,
             'platform' => $client->get_platform_list(),
             'type' => $client->get_type_list(),
-            'call_schema' => $client->call_schema
+            'call_schema' => $client->call_schema,
+            'button_id' => $client->button_id,
+            'podcast_id' => $client->podcast_id
         ]);
     }
 
@@ -162,6 +204,11 @@ class Client_Controller extends \WP_REST_Controller
             $client->title = $title;
         }
 
+        if (isset($request['button_id'])) {
+            $button_id = $request['button_id'];
+            $client->button_id = $button_id;
+        }
+
         if (isset($request['platform'])) {
             $platforms = $request['platform'];
             $client->platform = Client::get_platform($platforms);
@@ -170,6 +217,11 @@ class Client_Controller extends \WP_REST_Controller
         if (isset($request['type'])) {
             $types = $request['type'];
             $client->type = Client::get_type($types);
+        }
+
+        if (isset($request['podcast_id'])) {
+            $podcast_id = $request['podcast_id'];
+            $client->podcast_id = $podcast_id;
         }
 
         $client->save();

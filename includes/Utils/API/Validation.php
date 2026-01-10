@@ -28,4 +28,23 @@ class Validation
         return false;
     }
 
+    public static function button_id($param, $request, $key)
+    {
+        if (!isset($param) || $param === '') {
+            return false;
+        }
+
+        if (!is_numeric($param)) {
+            return false;
+        }
+
+        $id = (int) $param;
+        if ($id <= 0) {
+            return false;
+        }
+
+        $button = \PodloveSubscribeButton\Model\Button::find_by_id($id);
+        return isset($button);
+    }
+
 }

@@ -179,6 +179,12 @@ class Button extends Base {
             );
     }
 
+    public function delete() {
+        $button_id = $this->id;
+        Client::delete_by_button_id($button_id);
+        return parent::delete();
+    }
+
     /**
      * Helper function to interpret the given $autowidth value correctly
      * @param  string $autowidth

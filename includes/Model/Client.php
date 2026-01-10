@@ -148,6 +148,14 @@ class Client extends Base {
         // Return as indexed array
         return array_values($merged);
     }
+
+    public static function delete_by_button_id($button_id) {
+        $clients = self::find_all_by_property( 'button_id', $button_id );
+
+        foreach ( $clients as $client ) {
+            $client->delete();
+        }
+    }
 }
 
 Client::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
@@ -155,3 +163,5 @@ Client::property( 'title', 'VARCHAR(255)' );
 Client::property( 'platform', 'INTEGER' );
 Client::property( 'type', 'INTEGER' );
 Client::property( 'call_schema', 'TEXT' );
+Client::property( 'button_id', 'INT' );
+Client::property( 'podcast_id', 'VARCHAR(255)' );
