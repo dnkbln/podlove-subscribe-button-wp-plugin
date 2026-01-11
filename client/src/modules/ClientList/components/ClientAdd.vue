@@ -81,16 +81,12 @@
 import { computed, ref, watch } from 'vue';
 import { ChevronDownIcon, GlobeAltIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 import PodloveButton from '../../../components/button/Button.vue';
-import { Client } from '../../../types/client.types';
+import { Client, ClientAddSelection } from '../../../types/client.types';
 import Popover from '../../../components/popover/Popover.vue';
 
 import antennaPodIcon from '../../../assets/antennapod/icon.svg';
 import applePodcastsIcon from '../../../assets/apple-podcasts/icon.svg';
 import gpodderIcon from '../../../assets/gpodder/icon.svg';
-
-export type ClientAddSelection =
-  | { type: 'all' }
-  | { type: 'client'; client: Client };
 
 const props = defineProps<{
   clients: Client[];
@@ -107,8 +103,8 @@ const activeIndex = ref(0);
 const selectedKeys = computed(() => {
   const keys = new Set<string>();
   for (const client of props.selectedClients ?? []) {
-    if (client.id) {
-      keys.add(client.id);
+    if (Number.isFinite(client.id)) {
+      keys.add(String(client.id));
     }
     if (client.title) {
       keys.add(client.title);
@@ -119,7 +115,7 @@ const selectedKeys = computed(() => {
 
 const availableClients = computed(() => {
   return (props.clients ?? []).filter((client) => {
-    if (client.id && selectedKeys.value.has(client.id)) {
+    if (Number.isFinite(client.id) && selectedKeys.value.has(String(client.id))) {
       return false;
     }
     if (client.title && selectedKeys.value.has(client.title)) {
@@ -149,7 +145,10 @@ const allOption = computed(() => {
 const indexOffset = computed(() => (allOption.value ? 1 : 0));
 
 function clientKey(client: Client): string {
-  return client.id ?? client.title ?? '';
+  if (Number.isFinite(client.id)) {
+    return String(client.id);
+  }
+  return client.title ?? '';
 }
 
 function itemKey(client: Client): string {

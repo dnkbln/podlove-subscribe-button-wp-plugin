@@ -1,44 +1,42 @@
 <template>
-  <Module title="Clients">
-    <template v-slot:actions>
-      <ClientAdd
-        :clients="state.clientList"
-        :selected-clients="state.selectedClients"
-        @select="handleClientSelect" />
-    </template>
-    <div class="border-b border-gray-200 pb-5 m-5">
+  <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
+    <div class="ml-4 mt-2">
       <p class="mt-2 text-sm text-gray-500">
-        Here you can select the apps and services you want to offer in the SubscribeButton.
-      </p>
-      <p class="mt-2 text-sm text-gray-500">
+        Here you can select the apps and services you want to offer in the SubscribeButton. <br>
         Some apps and services require you to provide information. This information is requested when
         creating buttons for the selected apps and services.
       </p>
     </div>
-    <ul role="list" class="m-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+    <div class="ml-4 mt-2 flex shrink-0">
+      <ClientAdd :clients="state.clientList" :selected-clients="state.selectedClients" @select="handleClientSelect" />
+    </div>
+  </div>
+  <div>
+    <ul role="list" class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
       <li v-for="client in state.selectedClients" :key="client.id" class="col-span-1">
-        <ClientItem
-          :client="client"
-          :supported-platforms="supportedPlatformsFor(client)" />
-      </li>
+        <ClientItem :client="client" :button-id="props.buttonId" :supported-platforms="supportedPlatformsFor(client)" />
+     </li>
     </ul>
-  </Module>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { injectStore, mapState } from 'redux-vuex';
 
-import { selectors } from '../../store';
-import Module from '../../components/module/Module.vue';
+import { selectors, State as StoreState } from '../../store';
 import ClientItem from './components/ClientItem.vue';
-import ClientAdd, { ClientAddSelection } from './components/ClientAdd.vue';
+import ClientAdd from './components/ClientAdd.vue';
 import { add_selected_clients } from '../../store/clients.store';
-import { Client } from '../../types/client.types';
+import { Client, ClientAddSelection } from '../../types/client.types';
+
+const props = defineProps<{
+  buttonId: number;
+}>();
 
 const state = mapState({
   clientList: selectors.client.clientList,
-  selectedClients: selectors.client.selectedClients
+  selectedClients: (storeState: StoreState) => selectors.client.selectedClientsByButton(storeState, props.buttonId)
 });
 
 const store = injectStore();
@@ -55,8 +53,8 @@ const clientListByTitle = computed(() => {
 
 function clientKeys(client: Client): string[] {
   const keys = [];
-  if (client.id) {
-    keys.push(client.id);
+  if (Number.isFinite(client.id)) {
+    keys.push(String(client.id));
   }
   if (client.title) {
     keys.push(client.title);
@@ -104,7 +102,7 @@ function handleClientSelect(selection: ClientAddSelection) {
   }
 
   if (toAdd.length) {
-    store.dispatch(add_selected_clients(toAdd));
+    store.dispatch(add_selected_clients({ buttonId: props.buttonId, clients: toAdd }));
   }
 }
 

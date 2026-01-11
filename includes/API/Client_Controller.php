@@ -119,15 +119,10 @@ class Client_Controller extends \WP_REST_Controller
             return new NotFound();
         }
         $button_id = $request['button_id'];
+        $clients = Client::find_all_by_button_id($button_id);
 
-        $clients = Client::all();
         $results = [];
-
-        $filteredClients = array_filter($clients, function ($client) use ($button_id) {
-            return $client->button_id == $button_id;
-        });
-
-        foreach ($filteredClients as $client) {
+        foreach ($clients as $client) {
             $results[] = [
                 'id' => $client->id,
                 'title' => $client->title,

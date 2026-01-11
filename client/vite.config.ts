@@ -17,6 +17,8 @@ export default defineConfig({
       '@': path.resolve(root, 'src'),
       '@store': path.resolve(root, 'src', 'store'),
       '@sagas': path.resolve(root, 'src', 'sagas'),
+      '@components': path.resolve(root, 'src', 'components'),
+      '@modules': path.resolve(root, 'src', 'modules'),
     }
   },
   build: {

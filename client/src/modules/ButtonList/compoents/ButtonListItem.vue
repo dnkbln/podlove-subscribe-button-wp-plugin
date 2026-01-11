@@ -45,6 +45,7 @@ const store = injectStore();
 
 const emit = defineEmits<{
   (e: 'closed', id: string): void
+  (e: 'opened', id: string): void
 }>()
 
 const props = defineProps<{
@@ -60,7 +61,9 @@ watch(() => props.open, (val) => {
 
 function toggleEdit() {
     isOpen.value = !isOpen.value
-    if (!isOpen.value) {
+    if (isOpen.value) {
+      emit('opened', props.button.id)
+    } else {
       emit('closed', props.button.id)
     }
 }

@@ -90,10 +90,11 @@ const store = injectStore();
 const props = defineProps<{
   client: Client;
   supportedPlatforms: Client['platform'];
+  buttonId: number;
 }>();
 
 function removeClient() {
-  store.dispatch(remove_selected_client(props.client))
+  store.dispatch(remove_selected_client({ buttonId: props.buttonId, client: props.client }))
 }
 
 const platformLabels: Record<string, string> = {
@@ -134,6 +135,7 @@ const missingPlatforms = computed(() =>
 function removePlatform(platform: string) {
   const updatedPlatforms = visiblePlatforms.value.filter((entry) => entry !== platform);
   store.dispatch(update_selected_client({
+    buttonId: props.buttonId,
     id: props.client.id,
     prop: 'platform',
     value: updatedPlatforms
@@ -147,6 +149,7 @@ function handleRemoveTag(id: string | number) {
 function addPlatform(platform: string, close: () => void) {
   const updatedPlatforms = Array.from(new Set([...visiblePlatforms.value, platform]));
   store.dispatch(update_selected_client({
+    buttonId: props.buttonId,
     id: props.client.id,
     prop: 'platform',
     value: updatedPlatforms

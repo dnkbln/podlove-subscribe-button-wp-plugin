@@ -158,7 +158,6 @@ class PodloveSubscribeButton {
         <div style="padding-top: 1rem; padding-right: 1rem" >
             <div data-client="podlove-subscribe-button">
                 <subscribe-button-overview></subscribe-button-overview>
-                <subscribe-client-list></subscribe-client-list>
                 <subscribe-button-list></subscribe-button-list>
             </div>
         </div>

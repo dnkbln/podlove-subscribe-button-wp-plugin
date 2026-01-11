@@ -149,6 +149,10 @@ class Client extends Base {
         return array_values($merged);
     }
 
+    public static function find_all_by_button_id($button_id) {
+        return self::find_all_by_property( 'button_id', $button_id );
+    }
+
     public static function delete_by_button_id($button_id) {
         $clients = self::find_all_by_property( 'button_id', $button_id );
 

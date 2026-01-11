@@ -39,7 +39,7 @@
 
 namespace PodloveSubscribeButton;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 4 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 5 );
 
 add_action( 'admin_init', '\PodloveSubscribeButton\maybe_run_database_migrations' );
 add_action( 'admin_init', '\PodloveSubscribeButton\run_database_migrations', 5 );
@@ -157,6 +157,40 @@ function run_migrations_for_version( $version ) {
             break;
         case 4:
             \PodloveSubscribeButton\Model\Client::build();
+            break;
+        case 5:
+            $client_table = Model\Client::table_name();
+            $columns = $wpdb->get_col('DESC `' . $client_table . '`', 0);
+
+            if (!in_array('button_id', $columns, true)) {
+                $sql1 = sprintf(
+                    'ALTER TABLE `%s` ADD COLUMN `button_id` INT NULL',
+                    $client_table
+                );
+                podlove_do_migration_query($sql1);
+            }
+
+            if (!in_array('podcast_id', $columns, true)) {
+                $sql2 = sprintf(
+                    'ALTER TABLE `%s` ADD COLUMN `podcast_id` VARCHAR(255) NULL',
+                    $client_table
+                );
+                podlove_do_migration_query($sql2);
+            }
+
+            Model\Client::build_indices();
+
+            $buttons = Model\Button::all();
+            if (empty($buttons)) {
+                $wpdb->query('DELETE FROM `' . $client_table . '`');
+                break;
+            }
+
+            $default_button_id = $buttons[0]->id;
+            $wpdb->query(
+                'UPDATE `' . $client_table . '` SET `button_id` = ' . (int) $default_button_id .
+                ' WHERE `button_id` IS NULL OR `button_id` = 0'
+            );
             break;
     }
 

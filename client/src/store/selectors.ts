@@ -37,7 +37,8 @@ const settings = {
 
 const client = {
   clientList: createSelector(root.client, clientStore.selectors.clientList),
-  selectedClients: createSelector(root.client, clientStore.selectors.selectedClients)
+  selectedClientsByButton: (state: State, buttonId: number) =>
+    clientStore.selectors.selectedClientsByButton(root.client(state), buttonId),
 }
 
 export default {

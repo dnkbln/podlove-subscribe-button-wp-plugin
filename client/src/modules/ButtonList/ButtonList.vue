@@ -27,6 +27,7 @@
             :key="button.id"
             :button="button"
             :open="openId === String(button.id)"
+            @opened="handleOpened"
             @closed="handleClosed"
           ></ButtonListItem>
         </ul>
@@ -61,6 +62,10 @@ function handleClosed(id: string) {
   if (openId.value === id) {
     openId.value = null
   }
+}
+
+function handleOpened(id: string) {
+  openId.value = id
 }
 
 </script>

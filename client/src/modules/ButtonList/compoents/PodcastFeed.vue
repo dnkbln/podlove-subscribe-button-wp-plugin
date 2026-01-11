@@ -14,7 +14,7 @@
           border border-gray-300
           rounded-md
           resize-y
-        " :value="button.feeds[0]?.url ?? ''" @input="changeFeeds($event)"> </input>
+        " :value="feedUrl" @input="changeFeeds($event)"> </input>
     </div>
     <p class="mt-2 text-sm text-gray-500 flex justify-between">
       <span>Podcast feed</span>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { injectStore } from 'redux-vuex';
 import { SubscribeButton } from '../../../types/buttons.types'
 import { updateItem as updateButtonItem } from '../../../store/buttons.store';
@@ -37,6 +37,10 @@ const props = defineProps<{
 const selected = ref(true);
 
 const store = injectStore();
+
+const feedUrl = computed(() => {
+    return props.button.feeds ? props.button.feeds[0]?.url ?? '' : '';
+});
 
 const changeFeeds = (event: Event) => {
     let feeds : Feed[] = new Array<Feed>({ url: (event.target as HTMLInputElement).value, itunesfeedid: null, format: 'mp3' });

@@ -69,10 +69,11 @@ const readApi =
     method: 'GET' | 'DELETE'
     urlProcessor?: (url: string) => string
   }) =>
-  (url: string, { headers, query }: ApiOptions = {}) =>
+  (url: string, data: any, { headers, query }: ApiOptions = {}) =>
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
+      body: JSON.stringify(data),
     }).then(responseParser(errorHandler))
 
 const createApi =
@@ -100,8 +101,8 @@ const createApi =
   }
 
 export interface SubscribeApiClient {
-  get: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
-  delete: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  get: (url: string, data?: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  delete: (url: string, data?: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
   post: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
   put: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
 }
