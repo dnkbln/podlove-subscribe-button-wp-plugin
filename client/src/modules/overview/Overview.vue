@@ -15,6 +15,5 @@
 </template>
 
 <script setup lang="ts">
-import Module from '../../components/module/Module.vue'
-import Settings from './components/Settings.vue'
+import Module from '@components/module/Module.vue'
 </script>

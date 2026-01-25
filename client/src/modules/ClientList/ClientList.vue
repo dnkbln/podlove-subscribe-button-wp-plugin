@@ -24,10 +24,10 @@
 import { computed } from 'vue';
 import { injectStore, mapState } from 'redux-vuex';
 
-import { selectors, State as StoreState } from '../../store';
+import { selectors, State as StoreState } from '@store/index';
 import ClientItem from './components/ClientItem.vue';
 import ClientAdd from './components/ClientAdd.vue';
-import { add_selected_clients } from '../../store/clients.store';
+import { add_selected_clients } from '@store/clients.store';
 import { Client, ClientAddSelection } from '../../types/client.types';
 
 const props = defineProps<{

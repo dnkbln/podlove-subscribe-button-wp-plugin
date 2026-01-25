@@ -80,9 +80,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { ChevronDownIcon, GlobeAltIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
-import PodloveButton from '../../../components/button/Button.vue';
 import { Client, ClientAddSelection } from '../../../types/client.types';
-import Popover from '../../../components/popover/Popover.vue';
+import PodloveButton from '@components/button/Button.vue';
+import Popover from '@components/popover/Popover.vue';
 
 import antennaPodIcon from '../../../assets/antennapod/icon.svg';
 import applePodcastsIcon from '../../../assets/apple-podcasts/icon.svg';

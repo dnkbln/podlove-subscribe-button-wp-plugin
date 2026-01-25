@@ -15,7 +15,8 @@
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@store/*": ["src/store/*"],
-      "@sagas/*": ["src/sagas/*"]
+      "@sagas/*": ["src/sagas/*"],
+      "@app-types/*": ["src/types/*"]
     }
   },
   "exclude": ["node_modules/**/*"],

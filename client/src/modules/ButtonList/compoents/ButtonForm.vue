@@ -35,8 +35,8 @@ import PodcastCover from './PodcastCover.vue';
 import PodcastFeed from './PodcastFeed.vue';
 import ClientList from '../../ClientList/ClientList.vue';
 
-import { SubscribeButton } from '../../../types/buttons.types'
-import { fetch_selected_clients } from '../../../store/clients.store';
+import type { SubscribeButton } from '@app-types/buttons.types'
+import { fetch_selected_clients } from '@store/clients.store';
 
 const props = defineProps<{
   button: SubscribeButton;

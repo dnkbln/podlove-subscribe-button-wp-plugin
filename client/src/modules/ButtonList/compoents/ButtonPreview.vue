@@ -8,7 +8,7 @@ import { onMounted, nextTick } from 'vue'
 import { SubscribeButton } from '../../../types/buttons.types'
 
 import { mapState } from 'redux-vuex';
-import { selectors } from '../../../store';
+import { selectors } from '@store/index';
 
 
 const state = mapState({

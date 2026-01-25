@@ -1,23 +1,19 @@
 <template>
   <article
     class="flex h-full flex-col rounded-lg border border-gray-200 bg-white shadow-xs transition hover:shadow-sm dark:border-white/10 dark:bg-gray-900">
-    <header class="flex items-start justify-between gap-3 p-4">
-      <div class="flex items-center gap-3">
+    <header class="p-4">
+      <div class="grid grid-cols-[48px_1fr_48px] items-center gap-3">
         <img
           class="size-12 rounded-md bg-gray-100 object-contain p-1 outline -outline-offset-1 outline-black/5 dark:bg-gray-800 dark:outline-white/10"
-          :src="iconPath"
-          :alt="`${props.client.title} Icon`" />
+          :src="iconPath" :alt="`${props.client.title} Icon`" />
         <div class="min-w-0">
           <p class="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
             {{ props.client.title }}
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">Client</p>
         </div>
-        <button
-          type="button"
+        <button type="button"
           class="inline-flex size-12 items-center justify-center rounded-md text-gray-500 hover:text-red-600"
-          aria-label="Remove client"
-          @click="removeClient()">
+          aria-label="Remove client" @click="removeClient()">
           <trash-icon class="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
@@ -77,9 +73,9 @@ import { Client } from '../../../types/client.types';
 import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { injectStore } from 'redux-vuex';
 
-import { remove_selected_client, update_selected_client } from '../../../store/clients.store';
-import Popover from '../../../components/popover/Popover.vue';
-import PodloveTag from '../../../components/tag/Tag.vue';
+import { remove_selected_client, update_selected_client } from '@store/clients.store';
+import Popover from '@components/popover/Popover.vue';
+import PodloveTag from '@components/tag/Tag.vue';
 
 import antennaPodIcon  from '../../../assets/antennapod/icon.svg';
 import applePodcastsIcon  from '../../../assets/apple-podcasts/icon.svg';

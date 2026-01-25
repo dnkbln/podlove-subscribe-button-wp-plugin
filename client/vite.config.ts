@@ -19,6 +19,7 @@ export default defineConfig({
       '@sagas': path.resolve(root, 'src', 'sagas'),
       '@components': path.resolve(root, 'src', 'components'),
       '@modules': path.resolve(root, 'src', 'modules'),
+      '@app-types': path.resolve(root, 'src', 'types'),
     }
   },
   build: {

@@ -37,8 +37,8 @@ import { injectStore } from 'redux-vuex';
 import { SubscribeButton } from '../../../types/buttons.types'
 import ButtonForm from './ButtonForm.vue'
 import ButtonPreview from './ButtonPreview.vue'
-import { deleteButton } from '../../../store/buttons.store';
-import Disclosure from '../../../components/disclosure/Disclosure.vue';
+import { deleteButton } from '@store/buttons.store';
+import Disclosure from '@components/disclosure/Disclosure.vue';
 
 const isOpen = ref(false);
 const store = injectStore();

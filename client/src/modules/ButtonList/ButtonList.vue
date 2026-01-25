@@ -39,11 +39,11 @@
 <script setup lang="ts">
 import { mapState } from 'redux-vuex';
 import { ref, watch } from 'vue';
-import { selectors } from '../../store';
+import { selectors } from '@store/index';
 
 import ButtonListItem from './compoents/ButtonListItem.vue';
 import ButtonAdd from './compoents/ButtonAdd.vue';
-import Module from '../../components/module/Module.vue'
+import Module from '@components/module/Module.vue'
 
 const state = mapState({
   buttons: selectors.buttons.buttons,

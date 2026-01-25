@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { computed, StyleValue } from 'vue';
 import { PencilIcon } from '@heroicons/vue/24/outline'
-import PodloveButton from '../../../components/button/Button.vue'
+import PodloveButton from '@components/button/Button.vue'
 
 const posterStyle = computed(() => {
     return { 'background-image': `url('https://grobschmuck.com/bilder/werktisch.jpg')` }

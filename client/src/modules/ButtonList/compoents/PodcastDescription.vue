@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { injectStore } from 'redux-vuex';
 import { SubscribeButton } from '../../../types/buttons.types'
-import { updateItem as updateButtonItem } from '../../../store/buttons.store';
+import { updateItem as updateButtonItem } from '@store/buttons.store';
 
 const props = defineProps<{
     button: SubscribeButton;
